@@ -54,8 +54,8 @@
 
   opacity: var(--progress);
   transform:
-    translateY(calc((1 - var(--progress)) * 60px))
-    scale(calc(0.9 + var(--progress) * 0.1));
+    translateY(calc((1 - var(--progress)) * 36px))
+    scale(calc(0.96 + var(--progress) * 0.04));
 
   transition: border-color .4s ease, box-shadow .4s ease;
 }

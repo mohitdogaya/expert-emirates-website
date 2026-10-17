@@ -58,10 +58,6 @@ function FeatureSection() {
 
     section.style.setProperty('--card-count', cards.length)
 
-    /* ease-in-out curve: slow at edges, fast in middle */
-    const easeInOut = (t) =>
-      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
-
     let ticking = false
 
     const update = () => {
@@ -78,18 +74,17 @@ function FeatureSection() {
       const n = cards.length
       const pad = 0.02          // tiny dead zone at start/end
       const usable = 1 - pad * 2
-      const duration = 0.06     // quick snap-in per card
+      const duration = 0.3      // overlap reveals so the middle cards do not pause
 
       cards.forEach((card, i) => {
-        /* map index through ease-in-out curve */
         const normalized = n > 1 ? i / (n - 1) : 0.5
-        const eased = easeInOut(normalized)
-
-        const start = pad + eased * (usable - duration)
+        const start = pad + normalized * (usable - duration)
         const end = start + duration
 
         let p = (scrollProgress - start) / (end - start)
         p = Math.max(0, Math.min(1, p))
+        // Smooth the start and finish of each card's scroll-driven reveal.
+        p = p * p * (3 - 2 * p)
 
         card.style.setProperty('--progress', p)
       })
