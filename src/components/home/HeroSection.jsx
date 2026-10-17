@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { FiArrowUpRight, FiChevronDown, FiZap } from 'react-icons/fi'
 import { metrics, strategies } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
-import ScrollText from './ScrollText.jsx'
 
 function CountUp({ value, format, active }) {
   const [count, setCount] = useState(0)
@@ -28,16 +27,40 @@ function CountUp({ value, format, active }) {
 
 function HeroSection() {
   const [selectedStrategy, setSelectedStrategy] = useState(strategies[0])
+  const [videoReady, setVideoReady] = useState(false)
+  const [titleVisible, setTitleVisible] = useState(false)
+  const [detailsVisible, setDetailsVisible] = useState(false)
   const [heroRef, heroVisible] = useScrollReveal()
 
+  useEffect(() => {
+    if (!heroVisible || !videoReady || titleVisible) return undefined
+
+    // Let the video finish fading in before revealing the title.
+    const timer = window.setTimeout(() => setTitleVisible(true), 900)
+    return () => window.clearTimeout(timer)
+  }, [heroVisible, videoReady, titleVisible])
+
+  useEffect(() => {
+    if (!titleVisible) {
+      setDetailsVisible(false)
+      return undefined
+    }
+
+    // Bring in metrics, controls, and account details after the copy appears.
+    const timer = window.setTimeout(() => setDetailsVisible(true), 1300)
+    return () => window.clearTimeout(timer)
+  }, [titleVisible])
+
   return (
-    <section className={`hero-card${heroVisible ? ' is-visible' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
+    <section className={`hero-card${titleVisible ? ' title-visible' : ''}${detailsVisible ? ' is-visible' : ''}${videoReady ? ' video-ready' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
       <video
         className="hero-video"
         autoPlay
         muted
         loop
         playsInline
+        preload="auto"
+        onCanPlayThrough={() => setVideoReady(true)}
         poster="/Figma/hero-section.png"
         aria-hidden="true"
       >
@@ -47,8 +70,11 @@ function HeroSection() {
 
       <div className="hero-topline">
         <div className="hero-copy">
-          <span className="eyebrow"><FiZap aria-hidden="true" /> Next-gen algorithmic trading</span>
-          <ScrollText as="h1" id="hero-title" className="text-reveal"><span className="reveal-line">Automate Your</span><span className="reveal-line reveal-line-gold">Trading Strategy</span></ScrollText>
+          <span className="eyebrow hero-eyebrow"><FiZap aria-hidden="true" /> Next-gen algorithmic trading</span>
+          <h1 id="hero-title">
+            <span className="reveal-line">Automate Your</span>
+            <span className="reveal-line reveal-line-gold">Trading Strategy</span>
+          </h1>
           <p className="description-reveal">
             Convert your manual strategy into a fully automated MT5 Expert Advisor
             with professional risk management and institutional-grade execution logic.
@@ -58,7 +84,7 @@ function HeroSection() {
         <div className="hero-metrics" aria-label="Platform performance">
           {metrics.map((metric) => (
             <div className="metric" key={metric.label}>
-              <strong><CountUp value={metric.value} format={metric.format} active={heroVisible} /></strong>
+              <strong><CountUp value={metric.value} format={metric.format} active={detailsVisible} /></strong>
               <span>{metric.label}</span>
             </div>
           ))}
