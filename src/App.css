@@ -73,7 +73,7 @@
 }
 .hero-card {
   isolation: isolate;
-  background: #241706 url('/Figma/hero-section.png') center 52% / cover no-repeat;
+  /* background: #241706 url('/Figma/hero-section.png') center 52% / cover no-repeat; */
   border: 1px solid #404040;
   border-radius: 48px;
   width: min(1628px,100% - 64px);
@@ -101,7 +101,9 @@
 }
 .hero-scrim {
   z-index: -1;
-  background: linear-gradient(90deg,#070502c7 0%,#0a07026b 35%,#0805022e 56%,#050403d6 100%),linear-gradient(#08060314,#0000 64%,#0d0903d6)
+  /* background: linear-gradient(90deg,#070502c7 0%,#0a07026b 35%,#0805022e 56%,#050403d6 100%),linear-gradient(#08060314,#0000 64%,#0d0903d6) */
+  
+    background:  linear-gradient(90deg, #07050200 0%, #0a070200 35%, #08050200 56%, #05040300 100%), linear-gradient(#08060314, #0000 64%, #0d090352);
 }
 .hero-topline {
   grid-template-columns: 1fr minmax(360px,420px);
@@ -1890,7 +1892,8 @@
     object-position: center
   }
   .hero-scrim {
-    background: linear-gradient(90deg,#060402c7,#0504036b),linear-gradient(#0000 40%,#0a0602e6)
+    /* background: linear-gradient(90deg,#060402c7,#0504036b),linear-gradient(#0000 40%,#0a0602e6) */
+    background:  linear-gradient(90deg, #07050200 0%, #0a070200 35%, #08050200 56%, #05040300 100%), linear-gradient(#08060314, #0000 64%, #0d090352);
   }
   .hero-topline {
     flex-direction: column;
