@@ -27,7 +27,7 @@ function ProductVideoSection() {
       <div className="product-video-copy">
         <span className="section-eyebrow">Product video library</span>
         <ScrollText className="scroll-title" id="product-videos-heading">Explore Every <span>Bot in Detail</span></ScrollText>
-        <p className="scroll-copy">Each Expert Advisor features dedicated videos to help you understand its functionality, configuration, and usage.</p>
+        <ScrollText as="p" className="scroll-copy" wordClassName="scroll-description-word">Each Expert Advisor features dedicated videos to help you understand its functionality, configuration, and usage.</ScrollText>
         <AnimatedLink href="#product-videos">Watch Product Tutorials</AnimatedLink>
       </div>
     </section>

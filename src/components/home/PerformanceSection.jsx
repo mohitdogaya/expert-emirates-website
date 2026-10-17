@@ -9,7 +9,7 @@ function PerformanceSection() {
       <div className="performance-copy">
         <span className="section-eyebrow">Performance &amp; Myfxbook integration</span>
         <ScrollText className="scroll-title" id="performance-heading">Real <span>Data.</span><br />Greater <span>Transparency.</span></ScrollText>
-        <p className="scroll-copy">Evaluate trading performance using available account statistics and verified reporting. Review equity growth, drawdown, trade history, and more through supported Myfxbook integration.</p>
+        <ScrollText as="p" className="scroll-copy" wordClassName="scroll-description-word">Evaluate trading performance using available account statistics and verified reporting. Review equity growth, drawdown, trade history, and more through supported Myfxbook integration.</ScrollText>
         <AnimatedLink href="#client-reviews">View Verified Performance</AnimatedLink>
         <p className="risk-note">Trading involves risk. Historical performance does not guarantee future results.</p>
       </div>

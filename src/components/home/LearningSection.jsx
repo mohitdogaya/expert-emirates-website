@@ -21,13 +21,13 @@ function LearningSection() {
       <div className="learning-copy">
         <span className="section-eyebrow">Client reviews</span>
         <ScrollText className="scroll-title" id="reviews-heading">Real <span>Experiences.</span><br />Honest <span>Feedback.</span></ScrollText>
-        <p className="scroll-copy">Discover how customers use Expert Emirates trading technology, explore their experiences, and learn about their setup journeys.</p>
+        <ScrollText as="p" className="scroll-copy" wordClassName="scroll-description-word">Discover how customers use Expert Emirates trading technology, explore their experiences, and learn about their setup journeys.</ScrollText>
         <AnimatedLink href="#product-videos">Watch Client Reviews</AnimatedLink>
       </div>
       <div className="education-copy">
         <span className="section-eyebrow">Trading education</span>
         <ScrollText className="scroll-title">Learn the Technology Behind<br /><span>Automated Trading</span></ScrollText>
-        <p className="scroll-copy">Build your understanding of Expert Advisors, MetaTrader 5, trading strategies, and risk management with our educational video library.</p>
+        <ScrollText as="p" className="scroll-copy" wordClassName="scroll-description-word">Build your understanding of Expert Advisors, MetaTrader 5, trading strategies, and risk management with our educational video library.</ScrollText>
         <AnimatedLink href="#product-videos">Explore Educational Videos</AnimatedLink>
       </div>
       <div className="lesson-grid" aria-label="Education video topics">

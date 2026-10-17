@@ -18,7 +18,7 @@ function EcosystemSection() {
           <span className="section-eyebrow">The Expert Emirates ecosystem</span>
           <ScrollText className="scroll-title" id="ecosystem-heading">Automation Meets<br />Practical Support.</ScrollText>
         </div>
-        <p className="scroll-copy">Explore automated trading technology, specialized Expert Advisors, and tools designed to support your trading journey.</p>
+        <ScrollText as="p" className="scroll-copy" wordClassName="scroll-description-word">Explore automated trading technology, specialized Expert Advisors, and tools designed to support your trading journey.</ScrollText>
       </div>
       <div className="ecosystem-stats">
         {stats.map(([value, label], index) => (
