@@ -1601,22 +1601,6 @@
   filter: none!important;
   transform: none!important
 }
-.scroll-title-word {
-  opacity: 0;
-  clip-path: inset(0 0 100%);
-  filter: blur(5px);
-  transition: opacity .65s,transform .8s cubic-bezier(.2,.75,.25,1),clip-path .7s cubic-bezier(.2,.75,.25,1),filter .8s;
-  transition-delay: calc(var(--word-index) * 38ms + var(--card-delay,0s));
-  will-change: opacity, transform, filter;
-  display: inline-block;
-  transform: translateY(.72em)rotate(2deg)
-}
-.is-visible .scroll-title-word {
-  opacity: 1;
-  clip-path: inset(0);
-  filter: blur();
-  transform: translate(0)rotate(0)
-}
 @keyframes lineReveal {
   0% {
     opacity: 0;
@@ -2386,7 +2370,7 @@
   .footer-marquee-track {
     animation: none
   }
-  .scroll-title-word,.is-visible .scroll-title-word {
+  .scroll-title-word,.scroll-text-title.is-visible .scroll-title-word {
     opacity: 1;
     clip-path: none;
     filter: none;
@@ -2459,15 +2443,6 @@
     opacity: 1;
     transform: translateY(0)
   }
-}
-.scroll-title-word {
-  filter: blur(7px);
-  transition: opacity .75s,transform .95s cubic-bezier(.2,.75,.25,1),clip-path .8s cubic-bezier(.2,.75,.25,1),filter .9s;
-  transition-delay: calc(var(--word-index)*44ms + var(--card-delay,0s));
-  transform: translateY(.82em)rotate(3deg)
-}
-.is-visible .scroll-title-word {
-  transform: translate(0,0)rotate(0)
 }
 @media (width<=760px) {
   .brand img {
@@ -2670,6 +2645,39 @@ h1,h2,h3,h1 span,h2 span,h3 span,.scroll-title-word {
   color: #f0cf54 !important;
   -webkit-text-fill-color: #f0cf54;
   text-shadow: 0 0 20px rgba(232, 199, 67, .22);
+}
+
+/* ScrollText rises into place one word at a time when its heading enters view. */
+.scroll-title-word {
+  display: inline-block;
+  opacity: 0;
+  clip-path: none;
+  filter: none;
+  transform: translateY(.7em);
+  transition: opacity .75s ease, transform 1.05s cubic-bezier(.2, .75, .25, 1);
+  transition-delay: calc(var(--word-index, 0) * 60ms + var(--card-delay, 0s));
+  will-change: opacity, transform;
+}
+
+.scroll-text-title.is-visible .scroll-title-word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#why-heading .scroll-title-word {
+  transition-duration: 1.4s;
+  transition-delay: calc(var(--word-index, 0) * 90ms + var(--card-delay, 0s));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-title-word,
+  .scroll-text-title.is-visible .scroll-title-word {
+    transition: none;
+    will-change: auto;
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
 }
 
 .faq-item.is-open {

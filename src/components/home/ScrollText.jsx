@@ -1,4 +1,4 @@
-import { Children, cloneElement, isValidElement } from 'react'
+import { Children, cloneElement, isValidElement, useEffect, useRef, useState } from 'react'
 
 function revealWords(nodes, sequence) {
   return Children.map(nodes, (node) => {
@@ -20,7 +20,32 @@ function revealWords(nodes, sequence) {
 
 function ScrollText({ as: Tag = 'h2', className = '', children, ...props }) {
   const sequence = { current: 0 }
-  return <Tag className={`scroll-text-title ${className}`.trim()} {...props}>{revealWords(children, sequence)}</Tag>
+  const titleRef = useRef(null)
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const title = titleRef.current
+    if (!title) return undefined
+
+    let observer
+    const observeTitle = () => {
+      observer?.disconnect()
+      const inset = Math.round(window.innerHeight * 0.1)
+      observer = new IntersectionObserver(([entry]) => {
+        setVisible(entry.isIntersecting)
+      }, { threshold: 0, rootMargin: `-${inset}px 0px -${inset}px 0px` })
+      observer.observe(title)
+    }
+
+    observeTitle()
+    window.addEventListener('resize', observeTitle)
+    return () => {
+      observer?.disconnect()
+      window.removeEventListener('resize', observeTitle)
+    }
+  }, [])
+
+  return <Tag ref={titleRef} className={`scroll-text-title${visible ? ' is-visible' : ''} ${className}`.trim()} {...props}>{revealWords(children, sequence)}</Tag>
 }
 
 export default ScrollText

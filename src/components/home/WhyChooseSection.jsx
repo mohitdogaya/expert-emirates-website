@@ -14,7 +14,7 @@ function WhyChooseSection() {
     >
       <div className="why-heading-block">
         <span className="why-eyebrow">Why choose Expert Emirates</span>
-        <ScrollText id="why-heading"><span>Technology Designed for</span><span>Systematic Trading</span></ScrollText>
+        <ScrollText id="why-heading" className="why-scroll-title"><span>Technology Designed for</span><span>Systematic Trading</span></ScrollText>
       </div>
       <div className="why-grid">
         {reasons.map(([title, description], index) => (
