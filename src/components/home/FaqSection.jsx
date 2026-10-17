@@ -3,6 +3,7 @@ import { FiMinus, FiPlus } from 'react-icons/fi'
 import { faqs } from './homeData.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function FaqSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -12,7 +13,7 @@ function FaqSection() {
     <section className={`faq-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="faq" aria-labelledby="faq-heading">
       <div className="faq-copy">
         <span className="section-eyebrow">Frequently asked questions</span>
-        <h2 id="faq-heading">Got Questions? We’ve<br />Got Answers.</h2>
+        <ScrollText id="faq-heading">Got Questions? We’ve<br />Got Answers.</ScrollText>
         <p>Find answers to common questions about our Expert Advisors, setup process, and support.</p>
         <AnimatedLink href="#faq-list">View All FAQs</AnimatedLink>
       </div>

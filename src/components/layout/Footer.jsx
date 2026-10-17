@@ -1,5 +1,6 @@
 import { FiBarChart2, FiInstagram, FiMail, FiSend, FiTwitter, FiYoutube } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
+import ScrollText from '../home/ScrollText.jsx'
 
 const footerGroups = [
   { title: 'Trading', links: [['How It Works', '#how-it-works'], ['Trading Bots', '#bots'], ['Performance', '#performance-heading']] },
@@ -43,7 +44,7 @@ function Footer() {
         <nav className="footer-links" aria-label="Footer navigation">
           {footerGroups.map(({ title, links }) => (
             <div className="footer-link-group" key={title}>
-              <h2>{title}</h2>
+              <ScrollText>{title}</ScrollText>
               {links.map(([label, href]) => <a href={href} key={label}>{label}</a>)}
             </div>
           ))}

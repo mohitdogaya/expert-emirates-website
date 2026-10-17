@@ -1,5 +1,6 @@
 import { steps } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function HowItWorksSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -8,7 +9,7 @@ function HowItWorksSection() {
     <section className={`how-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="how-it-works" aria-labelledby="how-heading">
       <div className="how-intro">
         <span className="section-eyebrow">How it works</span>
-        <h2 className="scroll-title" id="how-heading">Start Your Automated<br />Trading Journey</h2>
+        <ScrollText className="scroll-title" id="how-heading">Start Your Automated<br />Trading Journey</ScrollText>
         <div className="how-robot" role="img" aria-label="Expert Emirates trading assistant robot" />
       </div>
       <ol className="how-steps">

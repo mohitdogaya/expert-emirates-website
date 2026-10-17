@@ -1,12 +1,13 @@
 import { FiMapPin } from 'react-icons/fi'
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function ContactSection() {
   const [sectionRef, visible] = useScrollReveal()
   return (
     <section className={`contact-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="contact" aria-labelledby="contact-heading">
       <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
-        <h2>Contact Us</h2>
+        <ScrollText>Contact Us</ScrollText>
         <div className="contact-fields">
           <label><span className="visually-hidden">First name</span><input type="text" name="firstName" placeholder="First Name" autoComplete="given-name" required /></label>
           <label><span className="visually-hidden">Last name</span><input type="text" name="lastName" placeholder="Last Name" autoComplete="family-name" required /></label>
@@ -18,7 +19,7 @@ function ContactSection() {
         <button className="contact-submit" type="submit"><span className="button-label"><span>Send Message</span><span aria-hidden="true">Send Message</span></span></button>
       </form>
       <div className="contact-details">
-        <h2 id="contact-heading">Get In Touch</h2>
+        <ScrollText id="contact-heading">Get In Touch</ScrollText>
         <p className="contact-intro">We are here to assist you. Contact us for tailored solutions to elevate your business.</p>
         <div className="contact-address">
           <FiMapPin aria-hidden="true" />

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FiBarChart2, FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
+import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
 
 const links = [
   { label: 'Home', href: '#home' },
@@ -16,8 +16,7 @@ function Navbar() {
   return (
     <header className="site-header" id="home">
       <a className="brand" href="#home" aria-label="Expert Emirates home">
-        <span className="brand-mark"><FiBarChart2 aria-hidden="true" /></span>
-        <span>EXPERT<br />EMIRATES</span>
+        <img src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
       </a>
       <button
         className="menu-toggle"

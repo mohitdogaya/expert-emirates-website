@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FiArrowUpRight, FiChevronDown, FiZap } from 'react-icons/fi'
 import { metrics, strategies } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function CountUp({ value, format, active }) {
   const [count, setCount] = useState(0)
@@ -47,7 +48,7 @@ function HeroSection() {
       <div className="hero-topline">
         <div className="hero-copy">
           <span className="eyebrow"><FiZap aria-hidden="true" /> Next-gen algorithmic trading</span>
-          <h1 id="hero-title" className="text-reveal"><span className="reveal-line">Automate Your</span><span className="reveal-line reveal-line-gold">Trading Strategy</span></h1>
+          <ScrollText as="h1" id="hero-title" className="text-reveal"><span className="reveal-line">Automate Your</span><span className="reveal-line reveal-line-gold">Trading Strategy</span></ScrollText>
           <p className="description-reveal">
             Convert your manual strategy into a fully automated MT5 Expert Advisor
             with professional risk management and institutional-grade execution logic.
@@ -70,15 +71,19 @@ function HeroSection() {
 
       <div className="hero-bottom">
         <div className="strategy-list" id="bots" aria-label="Choose a trading bot">
-          {strategies.map((strategy) => (
+          {strategies.map((strategy, index) => (
             <button
               className={`strategy-chip${selectedStrategy === strategy ? ' is-selected' : ''}`}
               key={strategy}
+              style={{ '--chip-index': index }}
               type="button"
               onClick={() => setSelectedStrategy(strategy)}
               aria-pressed={selectedStrategy === strategy}
             >
-              {strategy}
+              <span className="strategy-chip-label">
+                <span>{strategy}</span>
+                <span aria-hidden="true">{strategy}</span>
+              </span>
             </button>
           ))}
         </div>

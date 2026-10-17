@@ -1,4 +1,5 @@
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function EcosystemSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -15,7 +16,7 @@ function EcosystemSection() {
       <div className="ecosystem-intro">
         <div>
           <span className="section-eyebrow">The Expert Emirates ecosystem</span>
-          <h2 className="scroll-title" id="ecosystem-heading">Automation Meets<br />Practical Support.</h2>
+          <ScrollText className="scroll-title" id="ecosystem-heading">Automation Meets<br />Practical Support.</ScrollText>
         </div>
         <p className="scroll-copy">Explore automated trading technology, specialized Expert Advisors, and tools designed to support your trading journey.</p>
       </div>

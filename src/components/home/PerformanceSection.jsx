@@ -1,5 +1,6 @@
 import useScrollReveal from './useScrollReveal.js'
 import AnimatedLink from './AnimatedLink.jsx'
+import ScrollText from './ScrollText.jsx'
 
 function PerformanceSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -7,7 +8,7 @@ function PerformanceSection() {
     <section className={`performance-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} aria-labelledby="performance-heading">
       <div className="performance-copy">
         <span className="section-eyebrow">Performance &amp; Myfxbook integration</span>
-        <h2 className="scroll-title" id="performance-heading">Real <span>Data.</span><br />Greater <span>Transparency.</span></h2>
+        <ScrollText className="scroll-title" id="performance-heading">Real <span>Data.</span><br />Greater <span>Transparency.</span></ScrollText>
         <p className="scroll-copy">Evaluate trading performance using available account statistics and verified reporting. Review equity growth, drawdown, trade history, and more through supported Myfxbook integration.</p>
         <AnimatedLink href="#client-reviews">View Verified Performance</AnimatedLink>
         <p className="risk-note">Trading involves risk. Historical performance does not guarantee future results.</p>

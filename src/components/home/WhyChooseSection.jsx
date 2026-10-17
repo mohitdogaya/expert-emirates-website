@@ -1,5 +1,6 @@
 import { reasons } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
+import ScrollText from './ScrollText.jsx'
 
 function WhyChooseSection() {
   const [sectionRef, isVisible] = useScrollReveal()
@@ -13,7 +14,7 @@ function WhyChooseSection() {
     >
       <div className="why-heading-block">
         <span className="why-eyebrow">Why choose Expert Emirates</span>
-        <h2 id="why-heading"><span>Technology Designed for</span><span>Systematic Trading</span></h2>
+        <ScrollText id="why-heading"><span>Technology Designed for</span><span>Systematic Trading</span></ScrollText>
       </div>
       <div className="why-grid">
         {reasons.map(([title, description], index) => (
