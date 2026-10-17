@@ -1,17 +1,15 @@
-/* ─── Section: TALL to create scroll room ─── */
+/* ─── Section: tighter ─── */
 .feature-section {
   position: relative;
   width: 100%;
-  /* height scales with card count — ~40vh per card */
-  height: calc(var(--card-count, 8) * 25vh + 100vh);
+  height: 80vh;
   margin: 0;
   padding: 0;
 }
 
-/* ─── Sticky wrapper: pins grid in viewport ─── */
 .feature-sticky {
   position: sticky;
-  top: 1vh;
+  top: 10vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,7 +18,6 @@
   margin: 0 auto;
 }
 
-/* ─── Grid ─── */
 .feature-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -33,7 +30,6 @@
   perspective: 1000px;
 }
 
-/* ─── Card ─── */
 .feature-card {
   --mouse-x: 50%;
   --mouse-y: 50%;
@@ -56,7 +52,6 @@
   background-size: 100% 43%;
   background-repeat: no-repeat;
 
-  /* scroll-driven */
   opacity: var(--progress);
   transform:
     translateY(calc((1 - var(--progress)) * 60px))
@@ -65,7 +60,6 @@
   transition: border-color .4s ease, box-shadow .4s ease;
 }
 
-/* ─── Spotlight glow ─── */
 .feature-spotlight {
   position: absolute;
   inset: -1px;
@@ -112,7 +106,6 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, .35), 0 0 60px rgba(255, 170, 30, .05);
 }
 
-/* ─── Graphic ─── */
 .feature-card .feature-graphic {
   position: absolute;
   top: 14px;
@@ -139,7 +132,6 @@
   filter: drop-shadow(0 12px 22px rgba(255, 174, 0, .3));
 }
 
-/* ─── Title ─── */
 .feature-card .feature-title {
   position: absolute;
   z-index: 3;
@@ -158,7 +150,6 @@
 
 .feature-card:hover .feature-title { transform: translateY(-3px); }
 
-/* ─── Arrow ─── */
 .feature-card .feature-arrow {
   position: absolute;
   top: 19px;
@@ -176,31 +167,31 @@
   transform: translate(0, 0) scale(1);
 }
 
-/* ─── Responsive ─── */
 @media (max-width: 900px) {
-  .feature-section {
-    height: calc(var(--card-count, 8) * 25vh + 5vh);
-  }
+  .feature-section { height: 90vh; }
+  .feature-sticky { top: 6vh; height: 50vh; }
   .feature-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .feature-card { height: 180px; min-height: 180px; }
 }
 
 @media (max-width: 560px) {
-  .feature-section {
-    height: calc(var(--card-count, 8) * 30vh + 100vh);
-  }
+  .feature-section { height: auto; }
   .feature-sticky {
+    position: relative;
+    top: auto;
+    height: auto;
     width: calc(100% - 36px);
-    top: 5vh;
-    height: 90vh;
+    padding: 32px 0;
   }
   .feature-grid { grid-template-columns: 1fr; gap: 16px; }
-  .feature-card { height: 170px; min-height: 170px; }
+  .feature-card {
+    height: 170px;
+    min-height: 170px;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .feature-card {
-    opacity: 1 !important;
-    transform: none !important;
-  }
+  .feature-card { opacity: 1 !important; transform: none !important; }
 }

@@ -56,35 +56,36 @@ function FeatureSection() {
     const cards = Array.from(section.querySelectorAll('.feature-card'))
     if (!cards.length) return
 
+    section.style.setProperty('--card-count', cards.length)
+
+    /* ease-in-out curve: slow at edges, fast in middle */
+    const easeInOut = (t) =>
+      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2
+
     let ticking = false
 
     const update = () => {
       const rect = section.getBoundingClientRect()
       const viewH = window.innerHeight
+      // Begin the reveal as the feature section enters the viewport, then
+      // finish by the time it reaches the top so there is no empty black pause.
+      const triggerDistance = viewH * 0.8
+      const scrollProgress = Math.max(
+        0,
+        Math.min(1, (triggerDistance - rect.top) / triggerDistance),
+      )
 
-      /*
-        scrollProgress:
-          0 = section top hits viewport top
-          1 = section bottom hits viewport bottom
-      */
-      const scrollable = rect.height - viewH
-      if (scrollable <= 0) return
-
-      const raw = -rect.top / scrollable
-      const scrollProgress = Math.max(0, Math.min(1, raw))
-
-      /*
-        stagger: gap between each card's start
-        duration: how quickly each card snaps in
-
-        With 8 cards:
-          0.10 × 7 + 0.08 = 0.78  (fits inside 0–1)
-      */
-      const stagger = 0.10
-      const duration = 0.08
+      const n = cards.length
+      const pad = 0.02          // tiny dead zone at start/end
+      const usable = 1 - pad * 2
+      const duration = 0.06     // quick snap-in per card
 
       cards.forEach((card, i) => {
-        const start = i * stagger
+        /* map index through ease-in-out curve */
+        const normalized = n > 1 ? i / (n - 1) : 0.5
+        const eased = easeInOut(normalized)
+
+        const start = pad + eased * (usable - duration)
         const end = start + duration
 
         let p = (scrollProgress - start) / (end - start)
@@ -123,11 +124,9 @@ function FeatureSection() {
       <h2 id="feature-heading" className="visually-hidden">
         Trading platform features
       </h2>
-
-      {/* sticky wrapper keeps grid pinned while section scrolls */}
       <div className="feature-sticky">
         <div className="feature-grid">
-          {features.map(({ title, image }, index) => (
+          {features.map(({ title, image }) => (
             <FeatureCard key={title} title={title} image={image} />
           ))}
         </div>
