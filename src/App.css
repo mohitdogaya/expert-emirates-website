@@ -139,10 +139,10 @@
   color: #efcc20
 }
 .hero-copy h1 {
-  letter-spacing: -.035em;
+  letter-spacing: -.02em;
   margin: 34px 0 0;
   font-size: clamp(31px,2.8vw,43px);
-  font-weight: 720;
+  font-weight: 600;
   line-height: 1.08
 }
 .hero-copy h1 span {
@@ -2655,7 +2655,6 @@ h1,h2,h3,h1 span,h2 span,h3 span,.scroll-title-word {
 
 /* Keep the hero headline crisp and let the gold line carry the accent. */
 .hero-copy h1 {
-  letter-spacing: -.045em;
   text-shadow: 0 3px 18px rgba(0, 0, 0, .48);
 }
 
