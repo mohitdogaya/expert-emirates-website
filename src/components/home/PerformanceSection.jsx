@@ -1,6 +1,7 @@
 import useScrollReveal from './useScrollReveal.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import ScrollText from './ScrollText.jsx'
+import StarBorder from '../visuals/StarBorder.jsx'
 
 function PerformanceSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -13,6 +14,23 @@ function PerformanceSection() {
         <AnimatedLink href="#client-reviews">View Verified Performance</AnimatedLink>
         <p className="risk-note">Trading involves risk. Historical performance does not guarantee future results.</p>
       </div>
+      <StarBorder
+        as="div"
+        className="performance-border"
+        color="#f2c94c"
+        trailColor="#ffe9a1"
+        duration={6.5}
+        direction="clockwise"
+        trailLength={0.58}
+        thickness={1.4}
+        radius={17}
+        glow={0.28}
+        hover="brighten"
+        clickPulse={false}
+        theme="dark"
+        backgroundColor="transparent"
+        borderColor="rgba(242, 201, 76, 0.25)"
+      >
       <div className="performance-panel" aria-label="Illustrative verified performance chart">
         <div className="chart-heading"><strong>Verified Performance</strong><span className="myfx-logo">my<span>fx</span>book</span></div>
         <div className="chart-wrap">
@@ -31,6 +49,7 @@ function PerformanceSection() {
         </div>
         <small className="chart-disclaimer">Illustrative example for demonstration purposes.</small>
       </div>
+      </StarBorder>
     </section>
   )
 }

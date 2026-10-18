@@ -1,6 +1,7 @@
 import { reasons } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import FallingRays from '../visuals/FallingRays.jsx'
 
 function WhyChooseSection() {
   const [sectionRef, isVisible] = useScrollReveal()
@@ -12,6 +13,9 @@ function WhyChooseSection() {
       aria-labelledby="why-heading"
       ref={sectionRef}
     >
+      <div className="why-rays" aria-hidden="true">
+        <FallingRays />
+      </div>
       <div className="why-heading-block">
         <span className="why-eyebrow">Why choose Expert Emirates</span>
         <ScrollText id="why-heading" className="why-scroll-title"><span>Technology Designed for</span><span>Systematic Trading</span></ScrollText>
