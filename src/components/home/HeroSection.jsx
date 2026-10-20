@@ -27,18 +27,16 @@ function CountUp({ value, format, active }) {
 
 function HeroSection() {
   const [selectedStrategy, setSelectedStrategy] = useState(strategies[0])
-  const [videoReady, setVideoReady] = useState(false)
   const [titleVisible, setTitleVisible] = useState(false)
   const [detailsVisible, setDetailsVisible] = useState(false)
   const [heroRef, heroVisible] = useScrollReveal()
 
   useEffect(() => {
-    if (!heroVisible || !videoReady || titleVisible) return undefined
+    if (!heroVisible || titleVisible) return undefined
 
-    // Let the video finish fading in before revealing the title.
-    const timer = window.setTimeout(() => setTitleVisible(true), 900)
+    const timer = window.setTimeout(() => setTitleVisible(true), 250)
     return () => window.clearTimeout(timer)
-  }, [heroVisible, videoReady, titleVisible])
+  }, [heroVisible, titleVisible])
 
   useEffect(() => {
     if (!titleVisible) {
@@ -52,20 +50,7 @@ function HeroSection() {
   }, [titleVisible])
 
   return (
-    <section className={`hero-card${titleVisible ? ' title-visible' : ''}${detailsVisible ? ' is-visible' : ''}${videoReady ? ' video-ready' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
-      <video
-        className="hero-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        onCanPlayThrough={() => setVideoReady(true)}
-        poster="/Figma/hero-section.png"
-        aria-hidden="true"
-      >
-        <source src="/Figma/heo-section-bg-video.mp4" type="video/mp4" />
-      </video>
+    <section className={`hero-card${titleVisible ? ' title-visible' : ''}${detailsVisible ? ' is-visible' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
       <div className="hero-scrim" />
 
       <div className="hero-topline">

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
 
 const links = [
@@ -12,11 +12,20 @@ const links = [
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const updateScrolled = () => setScrolled(window.scrollY > 36)
+    updateScrolled()
+    window.addEventListener('scroll', updateScrolled, { passive: true })
+    return () => window.removeEventListener('scroll', updateScrolled)
+  }, [])
 
   return (
-    <header className="site-header" id="home">
+    <header className={`site-header${scrolled ? ' is-scrolled' : ''}`} id="home">
       <a className="brand" href="#home" aria-label="Expert Emirates home">
-        <img src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
+        <img className="brand-logo" src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
+        <img className="brand-favicon" src="/favicon.png" alt="" aria-hidden="true" />
       </a>
       <button
         className="menu-toggle"
