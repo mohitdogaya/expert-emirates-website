@@ -2,11 +2,13 @@ import Navbar from './components/layout/Navbar.jsx'
 import Home from './pages/Home.jsx'
 import Footer from './components/layout/Footer.jsx'
 import BinaryOrbits from './components/visuals/BinaryOrbits.jsx'
+import AnimatedCursor from './components/visuals/AnimatedCursor.jsx'
 import './App.css'
 
 function App() {
   return (
     <>
+      <AnimatedCursor />
       <BinaryOrbits
         className="binary-orbits-background"
         style={{

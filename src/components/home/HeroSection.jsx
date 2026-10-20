@@ -58,7 +58,7 @@ function HeroSection() {
           <span className="eyebrow hero-eyebrow"><FiZap aria-hidden="true" /> Next-gen algorithmic trading</span>
           <h1 id="hero-title">
             <span className="reveal-line">Automate Your</span>
-            <span className="reveal-line reveal-line-gold">Trading Strategy</span>
+            <span className="reveal-line reveal-line-gold gradient-heading">Trading Strategy</span>
           </h1>
           <p className="description-reveal">
             Convert your manual strategy into a fully automated MT5 Expert Advisor

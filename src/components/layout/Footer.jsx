@@ -1,4 +1,4 @@
-import { FiBarChart2, FiInstagram, FiMail, FiSend, FiTwitter, FiYoutube } from 'react-icons/fi'
+import { FiArrowUp, FiBarChart2, FiInstagram, FiMail, FiSend, FiTwitter, FiYoutube } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
 
@@ -37,15 +37,17 @@ function Footer() {
           </a>
           <button className="back-to-top" type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <span className="back-to-top-label"><span>Go to Top</span><span aria-hidden="true">Go to Top</span></span>
-            <span className="back-to-top-arrow"><span>↑</span><span aria-hidden="true">↑</span></span>
+            <span className="back-to-top-arrow"><FiArrowUp aria-hidden="true" /><FiArrowUp aria-hidden="true" /></span>
           </button>
         </div>
 
         <nav className="footer-links" aria-label="Footer navigation">
-          {footerGroups.map(({ title, links }) => (
-            <div className="footer-link-group" key={title}>
+          {footerGroups.map(({ title, links }, groupIndex) => (
+            <div className="footer-link-group" key={title} style={{ transitionDelay: `${0.22 + groupIndex * 0.075}s` }}>
               <ScrollText>{title}</ScrollText>
-              {links.map(([label, href]) => <a href={href} key={label}>{label}</a>)}
+              {links.map(([label, href], linkIndex) => (
+                <a href={href} key={label} style={{ transitionDelay: `${0.3 + groupIndex * 0.075 + linkIndex * 0.035}s` }}>{label}</a>
+              ))}
             </div>
           ))}
         </nav>

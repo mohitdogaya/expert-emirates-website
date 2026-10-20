@@ -22,7 +22,7 @@ function SectionHeading({
       )}
 
       {title && (
-        <h2 className="font-display text-3xl sm:text-4xl md:text-5xl leading-[1.05] tracking-tight text-balance">
+        <h2 className="gradient-heading font-display text-3xl sm:text-4xl md:text-5xl leading-[1.05] tracking-tight text-balance">
           {title}
         </h2>
       )}
