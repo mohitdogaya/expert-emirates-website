@@ -26,7 +26,7 @@ function App() {
         sparkle={0.5}
         arms={3}
         twist={3.5}
-        armStrength={0.5}
+        armStrength={0.8}
         dust={0.5}
         core={1}
         coreSize={0.05}
@@ -37,7 +37,7 @@ function App() {
         scale={0.8}
         centerX={0.5}
         centerY={0.52}
-        speed={0.65}
+        speed={0.7}
         twinkle={0.35}
         depth={0.4}
         glow={0.5}
