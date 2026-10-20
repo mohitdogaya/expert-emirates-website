@@ -3,11 +3,11 @@ import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
 
 const footerGroups = [
-  { title: 'Trading', links: [['How It Works', '#how-it-works'], ['Trading Bots', '#bots'], ['Performance', '#performance-heading']] },
+  { title: 'Trade', links: [['Dashboard', '#home']] },
   { title: 'Pages', links: [['Home', '#home'], ['Services', '#services'], ['Forecasts', '#forecasts'], ['FAQ', '#faq'], ['About', '#about'], ['Support', '#support']] },
-  { title: 'Products', links: [['Client Reviews', '#client-reviews'], ['Education', '#client-reviews'], ['Product Videos', '#product-videos']] },
-  { title: 'Platforms', links: [['MT5 Platform', '#how-it-works'], ['VPS Support', '#support']] },
-  { title: 'Accounts', links: [['Risk Management', '#about'], ['Setup Assistance', '#support']] },
+  { title: 'Products', links: [['Forex + Gold', '#bots'], ['Cryptocurrency', '#bots'], ['Portfolio Management', '#performance-heading'], ['Copy Trading', '#how-it-works']] },
+  { title: 'Platform', links: [['MT4 Platform', '#how-it-works'], ['MT5 Platform', '#how-it-works']] },
+  { title: 'Accounts', links: [['Standard', '#bots'], ['Pro', '#bots'], ['Ultra', '#bots']] },
 ]
 
 const socials = [
@@ -22,10 +22,10 @@ function Footer() {
 
   return (
     <footer className={`site-footer${footerVisible ? ' is-visible' : ''}`} ref={footerRef}>
-      <div className="footer-marquee" aria-label="Secure checkout, setup support included, find your perfect Expert Advisor">
+      <div className="footer-marquee" aria-label="Meet your trading edge, discover expert advisors, gold trading">
         <div className="footer-marquee-track" aria-hidden="true">
-          <span>Secure Checkout <b>•</b> Setup Support Included <b>•</b> Find Your Perfect EA <b>•</b>&nbsp;</span>
-          <span>Secure Checkout <b>•</b> Setup Support Included <b>•</b> Find Your Perfect EA <b>•</b>&nbsp;</span>
+          <span>Meet Your Trading Edge <b>•</b> Discover Expert Advisors <b>•</b> Gold Trading <b>•</b>&nbsp;</span>
+          <span>Meet Your Trading Edge <b>•</b> Discover Expert Advisors <b>•</b> Gold Trading <b>•</b>&nbsp;</span>
         </div>
       </div>
 
@@ -51,6 +51,8 @@ function Footer() {
             </div>
           ))}
         </nav>
+
+        <div className="footer-wordmark" aria-hidden="true">EXPERT EMIRATES</div>
 
         <div className="footer-contact-row">
           <a className="footer-email" href="mailto:info@expertemirates.com"><FiMail aria-hidden="true" /> info@expertemirates.com</a>
