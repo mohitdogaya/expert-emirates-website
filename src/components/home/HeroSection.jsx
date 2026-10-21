@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FiArrowUpRight, FiChevronDown, FiZap } from 'react-icons/fi'
 import { metrics, strategies } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
+import Magnet from '../visuals/Magnet.jsx'
 
 function CountUp({ value, format, active }) {
   const [count, setCount] = useState(0)
@@ -74,8 +75,12 @@ function HeroSection() {
             </div>
           ))}
           <div className="hero-actions">
-            <a className="button button-light" href="#bots"><span className="button-label"><span>Explore Our Bots</span><span aria-hidden="true">Explore Our Bots</span></span><FiArrowUpRight aria-hidden="true" /></a>
-            <a className="button button-outline" href="#demo"><span className="button-label"><span>Watch Demo</span><span aria-hidden="true">Watch Demo</span></span><FiArrowUpRight aria-hidden="true" /></a>
+            <Magnet padding={100} magnetStrength={4}>
+              <a className="button button-light" href="#bots"><span className="button-label"><span>Explore Our Bots</span><span aria-hidden="true">Explore Our Bots</span></span><FiArrowUpRight aria-hidden="true" /></a>
+            </Magnet>
+            <Magnet padding={100} magnetStrength={4}>
+              <a className="button button-outline" href="#demo"><span className="button-label"><span>Watch Demo</span><span aria-hidden="true">Watch Demo</span></span><FiArrowUpRight aria-hidden="true" /></a>
+            </Magnet>
           </div>
         </div>
       </div>

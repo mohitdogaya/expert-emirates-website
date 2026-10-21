@@ -9,21 +9,31 @@ import HowItWorksSection from '../components/home/HowItWorksSection.jsx'
 import VpsSupportSection from '../components/home/VpsSupportSection.jsx'
 import FaqSection from '../components/home/FaqSection.jsx'
 import ContactSection from '../components/home/ContactSection.jsx'
+import FadeContent from '../components/visuals/FadeContent.jsx'
+
+const fadeContentProps = {
+  effect: 'mist',
+  duration: 1.8,
+  ease: 'power2.out',
+  stagger: 0.1,
+  threshold: 0.1,
+  staggerChildren: true,
+}
 
 function Home() {
   return (
     <>
-      <HeroSection />
-      <FeatureSection />
-      <WhyChooseSection />
-      <EcosystemSection />
-      <PerformanceSection />
-      <LearningSection />
-      <ProductVideoSection />
-      <HowItWorksSection />
-      <VpsSupportSection />
-      <FaqSection />
-      <ContactSection />
+      <FadeContent {...fadeContentProps}><HeroSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><FeatureSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><WhyChooseSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><EcosystemSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><LearningSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><HowItWorksSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><VpsSupportSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><FaqSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><ContactSection /></FadeContent>
     </>
   )
 }

@@ -2,6 +2,7 @@ import { reasons } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
 import FallingRays from '../visuals/FallingRays.jsx'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function WhyChooseSection() {
   const [sectionRef, isVisible] = useScrollReveal()
@@ -22,10 +23,10 @@ function WhyChooseSection() {
       </div>
       <div className="why-grid">
         {reasons.map(([title, description], index) => (
-          <article className="why-card" key={title} style={{ '--why-delay': `${index * 75}ms` }}>
+          <BorderGlow className="why-card" key={title} style={{ '--why-delay': `${index * 75}ms` }} backgroundColor="#201f27" borderRadius={25} glowRadius={24}>
             <h3>{title}</h3>
             <p>{description}</p>
-          </article>
+          </BorderGlow>
         ))}
       </div>
     </section>

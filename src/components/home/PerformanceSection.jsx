@@ -2,6 +2,7 @@ import useScrollReveal from './useScrollReveal.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import ScrollText from './ScrollText.jsx'
 import StarBorder from '../visuals/StarBorder.jsx'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function PerformanceSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -31,7 +32,7 @@ function PerformanceSection() {
         backgroundColor="transparent"
         borderColor="rgba(242, 201, 76, 0.25)"
       >
-      <div className="performance-panel" aria-label="Illustrative verified performance chart">
+      <BorderGlow className="performance-panel" aria-label="Illustrative verified performance chart" backgroundColor="#17171b" borderRadius={17} glowRadius={24}>
         <div className="chart-heading"><strong>Verified Performance</strong><span className="myfx-logo">my<span>fx</span>book</span></div>
         <div className="chart-wrap">
           <div className="chart-y-labels"><span>150%</span><span>100%</span><span>50%</span><span>0%</span></div>
@@ -48,7 +49,7 @@ function PerformanceSection() {
           <div><strong>+152.4%</strong><span>Total Return</span></div><div><strong>8.2%</strong><span>Max Drawdown</span></div><div><strong>1,248</strong><span>Total Trades</span></div><div><strong>82.6%</strong><span>Win Rate</span></div>
         </div>
         <small className="chart-disclaimer">Illustrative example for demonstration purposes.</small>
-      </div>
+      </BorderGlow>
       </StarBorder>
     </section>
   )

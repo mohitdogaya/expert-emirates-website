@@ -5,6 +5,16 @@ import BinaryOrbits from './components/visuals/BinaryOrbits.jsx'
 import AnimatedCursor from './components/visuals/AnimatedCursor.jsx'
 import './App.css'
 import SplashCursor from './components/visuals/SplashCursor.jsx'
+import FadeContent from './components/visuals/FadeContent.jsx'
+
+const fadeContentProps = {
+  effect: 'mist',
+  duration: 1.8,
+  ease: 'power2.out',
+  stagger: 0.1,
+  threshold: 0.1,
+  staggerChildren: true,
+}
 
 function App() {
   return (
@@ -24,15 +34,15 @@ function App() {
         colors={['#fde35f', '#ffed4e']}
         backgroundColor="#0A0A0A"
         mode="auto"
-        stars={90000}
-        starSize={1.9}
+        stars={70000}
+        starSize={1.3}
         sparkle={5}
         arms={4}
         twist={4.5}
         armStrength={0.9}
-        dust={0.9}
-        core={1.9}
-        coreSize={0.01}
+        dust={0.2}
+        core={1.2}
+        coreSize={0.012}
         innerVoid={0}
         thickness={0.01}
         tilt={62}
@@ -41,21 +51,21 @@ function App() {
         centerX={0.5}
         centerY={0.52}
         speed={-1.7}
-        twinkle={0.2}
+        twinkle={0.82}
         depth={0.4}
-        glow={0.5}
-        intensity={1.6}
+        glow={0.2}
+        intensity={1.2}
         interactive={false}
         hoverWake={false}
         clickRipple={false}
         quality={1}
       />
       <div className="site-shell">
-        <Navbar />
+        <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
         <main>
           <Home />
         </main>
-        <Footer />
+        <FadeContent {...fadeContentProps}><Footer /></FadeContent>
       </div>
     </>
   )

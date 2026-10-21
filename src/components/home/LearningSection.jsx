@@ -3,6 +3,7 @@ import { lessons } from './homeData.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function LearningSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -10,12 +11,12 @@ function LearningSection() {
     <section className={`learning-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="client-reviews" aria-labelledby="reviews-heading">
       <div className="review-cards">
         {[0, 1].map((item) => (
-          <article className={`review-card review-card-${item + 1}`} key={item}>
+          <BorderGlow className={`review-card review-card-${item + 1}`} key={item} backgroundColor="#201f27" borderRadius={24} glowRadius={24}>
             <div className="review-thumbnail" role="img" aria-label="Customer review video preview">
               <span className="play-icon"><FiPlay aria-hidden="true" /></span>
             </div>
             <h3>Real Trader Review</h3><p>Setup Experience</p>
-          </article>
+          </BorderGlow>
         ))}
       </div>
       <div className="learning-copy">
@@ -32,9 +33,9 @@ function LearningSection() {
       </div>
       <div className="lesson-grid" aria-label="Education video topics">
         {lessons.map(([title, subtitle, Icon], index) => (
-          <article className="lesson-card" key={title} style={{ '--item-delay': `${index * 70}ms` }}>
+          <BorderGlow className="lesson-card" key={title} style={{ '--item-delay': `${index * 70}ms` }} backgroundColor="#201f27" borderRadius={18} glowRadius={20}>
             <Icon aria-hidden="true" /><h3>{title}</h3><p>{subtitle}</p>
-          </article>
+          </BorderGlow>
         ))}
       </div>
     </section>

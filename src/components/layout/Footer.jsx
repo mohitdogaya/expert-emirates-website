@@ -1,4 +1,5 @@
-import { FiArrowUp, FiBarChart2, FiInstagram, FiMail, FiSend, FiTwitter, FiYoutube } from 'react-icons/fi'
+import { useRef, useState } from 'react'
+import { FiAperture, FiArrowUp, FiBarChart2, FiCircle, FiInstagram, FiMail, FiPlus, FiSend, FiStar, FiSun, FiTwitter, FiYoutube, FiZap } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
 
@@ -17,8 +18,38 @@ const socials = [
   { label: 'Twitter', Icon: FiTwitter },
 ]
 
+const footerCursorIcons = [FiAperture, FiCircle, FiPlus, FiStar, FiSun, FiZap]
+const footerIconColors = ['#e8c743', '#f5f3f2', '#8be7e1', '#f6a6cf']
+
 function Footer() {
   const [footerRef, footerVisible] = useScrollReveal()
+  const [cursorIcons, setCursorIcons] = useState([])
+  const lastIconAt = useRef(0)
+  const iconId = useRef(0)
+
+  const showCursorIcon = (event) => {
+    const now = performance.now()
+    if (now - lastIconAt.current < 75) return
+    lastIconAt.current = now
+
+    const bounds = event.currentTarget.getBoundingClientRect()
+    const Icon = footerCursorIcons[Math.floor(Math.random() * footerCursorIcons.length)]
+    const offset = 12 + Math.random() * 26
+    const id = iconId.current++
+    setCursorIcons((icons) => [...icons, {
+      id,
+      Icon,
+      x: event.clientX - bounds.left + (Math.random() - 0.5) * offset,
+      y: event.clientY - bounds.top + (Math.random() - 0.5) * offset,
+      size: 14 + Math.random() * 12,
+      rotation: Math.round(Math.random() * 70 - 35),
+      color: footerIconColors[Math.floor(Math.random() * footerIconColors.length)],
+    }])
+  }
+
+  const removeCursorIcon = (id) => {
+    setCursorIcons((icons) => icons.filter((icon) => icon.id !== id))
+  }
 
   return (
     <footer className={`site-footer${footerVisible ? ' is-visible' : ''}`} ref={footerRef}>
@@ -52,7 +83,25 @@ function Footer() {
           ))}
         </nav>
 
-        <div className="footer-wordmark" aria-hidden="true">EXPERT EMIRATES</div>
+        <div className="footer-wordmark" aria-hidden="true" onPointerMove={showCursorIcon}>
+          {cursorIcons.map(({ id, Icon, x, y, size, rotation, color }) => (
+            <Icon
+              className="footer-cursor-icon"
+              key={id}
+              style={{ left: x, top: y, width: size, height: size, color, '--icon-rotation': `${rotation}deg` }}
+              onAnimationEnd={() => removeCursorIcon(id)}
+            />
+          ))}
+          {[...`EXPERT EMIRATES`].map((character, index) => (
+            <span
+              className="footer-wordmark-char"
+              key={`${character}-${index}`}
+              style={{ '--char-index': index }}
+            >
+              {character === ' ' ? '\u00a0' : character}
+            </span>
+          ))}
+        </div>
 
         <div className="footer-contact-row">
           <a className="footer-email" href="mailto:info@expertemirates.com"><FiMail aria-hidden="true" /> info@expertemirates.com</a>

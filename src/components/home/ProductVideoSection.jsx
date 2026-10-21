@@ -2,6 +2,7 @@ import { FiPlay } from 'react-icons/fi'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function ProductVideoSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -16,13 +17,13 @@ function ProductVideoSection() {
       <div className="product-video-list">
         <div className="product-video-grid">
           {videos.map(([title, thumbnail], index) => (
-            <article className="product-video-card" key={title} style={{ '--item-delay': `${index * 80}ms` }}>
+            <BorderGlow className="product-video-card" key={title} style={{ '--item-delay': `${index * 80}ms` }} backgroundColor="#201f27" borderRadius={24} glowRadius={24}>
               <div className={`product-thumbnail ${thumbnail}`}><span className="play-icon"><FiPlay aria-hidden="true" /></span></div>
               <h3>{title}</h3>
-            </article>
+            </BorderGlow>
           ))}
         </div>
-        <div className="installation-guide"><span className="play-icon"><FiPlay aria-hidden="true" /></span><strong>Complete Bot Installation &amp; VPS Setup Guide</strong></div>
+        <BorderGlow className="installation-guide" backgroundColor="#201f27" borderRadius={18} glowRadius={24}><span className="play-icon"><FiPlay aria-hidden="true" /></span><strong>Complete Bot Installation &amp; VPS Setup Guide</strong></BorderGlow>
       </div>
       <div className="product-video-copy">
         <span className="section-eyebrow">Product video library</span>

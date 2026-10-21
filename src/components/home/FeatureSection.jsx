@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { features } from './homeData.js'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 import './FeatureSection.css'
 
 function FeatureCard({ title, image }) {
-  const cardRef = useRef(null)
-
   const handlePointerMove = (event) => {
-    const card = cardRef.current
+    const card = event.currentTarget
     if (!card) return
     const b = card.getBoundingClientRect()
     const x = event.clientX - b.left
@@ -18,8 +17,8 @@ function FeatureCard({ title, image }) {
     card.style.setProperty('--tilt-y', `${((x / b.width) - 0.5) * 4}deg`)
   }
 
-  const resetPointer = () => {
-    const card = cardRef.current
+  const resetPointer = (event) => {
+    const card = event.currentTarget
     if (!card) return
     card.style.setProperty('--tilt-x', '0deg')
     card.style.setProperty('--tilt-y', '0deg')
@@ -27,11 +26,16 @@ function FeatureCard({ title, image }) {
 
   return (
     <div className="feature-stage">
-      <article
-        ref={cardRef}
+      <BorderGlow
         className="feature-card"
         onPointerMove={handlePointerMove}
         onPointerLeave={resetPointer}
+        backgroundColor="#1e1c25"
+        borderRadius={20}
+        glowColor="40 80 80"
+        glowRadius={24}
+        glowIntensity={1}
+        colors={['#c084fc', '#f472b6', '#38bdf8']}
       >
         <div className="feature-spotlight" aria-hidden="true" />
         <div className="feature-graphic">
@@ -41,7 +45,7 @@ function FeatureCard({ title, image }) {
         <span className="feature-arrow" aria-hidden="true">
           <FiArrowUpRight />
         </span>
-      </article>
+      </BorderGlow>
     </div>
   )
 }

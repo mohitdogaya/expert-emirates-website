@@ -1,6 +1,7 @@
 import { steps } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function HowItWorksSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -16,7 +17,7 @@ function HowItWorksSection() {
         {steps.map(([title, description], index) => (
           <li className="how-step" key={title} style={{ '--item-delay': `${index * 100}ms` }}>
             <span className="step-number">{String(index + 1).padStart(2, '0')}</span>
-            <div className="step-card"><h3>{title}</h3><p>{description}</p></div>
+            <BorderGlow className="step-card" backgroundColor="#201f27" borderRadius={26} glowRadius={24}><h3>{title}</h3><p>{description}</p></BorderGlow>
           </li>
         ))}
       </ol>

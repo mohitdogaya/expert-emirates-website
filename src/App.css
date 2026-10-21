@@ -925,31 +925,38 @@
   transform: translateY(-5px)
 }
 .product-thumbnail {
-  aspect-ratio: 1;
+  aspect-ratio: 1.18;
   background-image: url(/Figma/carts-section3.png);
   background-repeat: no-repeat;
-  background-size: 620%;
+  background-size: 1000% auto;
   border-radius: 13px;
   place-items: center;
   display: grid
 }
 .thumb-strategy {
-  background-position: 9% 14%
+  background-position: 8.5% 35%
 }
 .thumb-features {
-  background-position: 27% 14%
+  background-position: 21.5% 35%
 }
 .thumb-settings {
-  background-position: 46% 14%
+  background-position: 34.8% 35%
 }
 .thumb-product {
-  background-position: 64% 14%
+  background-position: 48% 35%
 }
 .product-video-card h3 {
-  min-height: 40px;
-  margin: 9px 1px 1px;
-  font-size: 11px;
-  line-height: 1.35
+  display: -webkit-box;
+  min-height: 2.7em;
+  margin: 10px 2px 2px;
+  overflow: hidden;
+  color: #f2d04f;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2
 }
 .installation-guide {
   background: #201f27;
@@ -970,6 +977,13 @@
   flex: none;
   width: 40px;
   height: 40px
+}
+.installation-guide > div {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 18px
 }
 .installation-guide strong {
   font-size: 15px
@@ -1607,21 +1621,50 @@
   display: grid
 }
 .footer-wordmark {
+  position: relative;
   color: #dedde0;
-  font-size: clamp(2rem, 9vw, 9rem);
+  font-size: clamp(2rem, 9vw, 8rem);
   font-weight: 800;
   letter-spacing: .055em;
   line-height: .86;
   white-space: nowrap;
   text-align: center;
   margin: -8px 0 35px;
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .7s .4s ease, transform .7s .4s cubic-bezier(.2,.75,.25,1);
-}
-.site-footer.is-visible .footer-wordmark {
   opacity: 1;
-  transform: translateY(0);
+}
+.footer-cursor-icon {
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px currentColor);
+  transform: translate(-50%, -50%) rotate(var(--icon-rotation)) scale(.35);
+  animation: footerCursorIcon .85s cubic-bezier(.2,.75,.25,1) forwards;
+}
+@keyframes footerCursorIcon {
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--icon-rotation)) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -125%) rotate(calc(var(--icon-rotation) + 35deg)) scale(.55);
+  }
+}
+.footer-wordmark-char {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(7px);
+  transform: translateY(.55em) rotate(5deg);
+  transition:
+    opacity .55s ease,
+    filter .65s ease,
+    transform .65s cubic-bezier(.2,.75,.25,1);
+  transition-delay: calc(var(--char-index) * 32ms);
+}
+.site-footer.is-visible .footer-wordmark-char {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0) rotate(0);
 }
 .footer-link-group {
   opacity: 0;
@@ -2259,8 +2302,8 @@
     padding: 8px
   }
   .product-video-card h3 {
-    min-height: 32px;
-    font-size: 11px
+    min-height: 2.7em;
+    font-size: 12px
   }
   .installation-guide {
     gap: 10px;
@@ -2531,6 +2574,7 @@
     animation: none
   }
   .footer-brand-row,
+  .footer-wordmark-char,
   .footer-link-group,
   .footer-link-group a,
   .footer-contact-row,
