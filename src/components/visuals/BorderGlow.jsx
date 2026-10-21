@@ -66,7 +66,7 @@ function getGlassColor(color) {
   const red = parseInt(value.slice(0, 2), 16);
   const green = parseInt(value.slice(2, 4), 16);
   const blue = parseInt(value.slice(4, 6), 16);
-  return `rgba(${red}, ${green}, ${blue}, 0.2)`;
+  return `rgba(${red}, ${green}, ${blue}, 0.1)`;
 }
 
 const BorderGlow = ({
