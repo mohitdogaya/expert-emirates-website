@@ -4,11 +4,12 @@ import Footer from './components/layout/Footer.jsx'
 import BinaryOrbits from './components/visuals/BinaryOrbits.jsx'
 import AnimatedCursor from './components/visuals/AnimatedCursor.jsx'
 import './App.css'
+import SplashCursor from './components/visuals/SplashCursor.jsx'
 
 function App() {
   return (
     <>
-      <AnimatedCursor />
+      <SplashCursor />
       <BinaryOrbits
         className="binary-orbits-background"
         style={{
@@ -20,7 +21,7 @@ function App() {
           minHeight: 0,
           pointerEvents: 'none',
         }}
-        colors={['#ffeb81', '#e2ff4e']}
+        colors={['#fde35f', '#ffed4e']}
         backgroundColor="#0A0A0A"
         mode="auto"
         stars={70000}
