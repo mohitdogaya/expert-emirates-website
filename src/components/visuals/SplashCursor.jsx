@@ -265,7 +265,7 @@ function SplashCursor({
   shading = 1,
   glow = 0,
   quality = 'high',
-  clickSplash = true,
+  clickSplash = false,
   intro = true,
   contained = false,
   theme = 'dark',
