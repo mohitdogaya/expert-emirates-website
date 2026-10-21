@@ -27,9 +27,9 @@ function App() {
         stars={70000}
         starSize={1.7}
         sparkle={0.5}
-        arms={3}
+        arms={5}
         twist={3.5}
-        armStrength={0.8}
+        armStrength={0.9}
         dust={0.5}
         core={1}
         coreSize={0.05}

@@ -1,26 +1,11 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 
-/**
- * BinaryOrbits
- * A tilted spiral galaxy of stars streaming through its arms.
- * Pure canvas 2D, no dependencies. Stars are rasterised into a pixel buffer,
- * so 70k+ stars stay smooth.
- *
- * Usage:
- *   <BinaryOrbits style={{ height: 600 }}>
- *     <h1>Hello</h1>
- *   </BinaryOrbits>
- *
- *   const ref = useRef()
- *   <BinaryOrbits ref={ref} />   ->   ref.current.ripple()
- */
-
 const TAU = Math.PI * 2
-const DEFAULT_COLORS = ['#7B4DFF', '#FFC2EE']
+const DEFAULT_COLORS = ['#7B4DFF', '#FFC2EE', '#00D4FF', '#FFD700']
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
-
-/* ---------- colour helpers (OKLab blending) ---------- */
+const lerp = (a, b, t) => a + (b - a) * t
+const smoothstep = (t) => t * t * (3 - 2 * t)
 
 function parseColor(input, fallback = [255, 255, 255]) {
   if (typeof input !== 'string') return fallback
@@ -49,9 +34,7 @@ const toSrgb = (c) => {
 }
 
 function toOklab([r, g, b]) {
-  const R = toLinear(r)
-  const G = toLinear(g)
-  const B = toLinear(b)
+  const R = toLinear(r), G = toLinear(g), B = toLinear(b)
   const l = Math.cbrt(0.4122214708 * R + 0.5363325363 * G + 0.0514459929 * B)
   const m = Math.cbrt(0.2119034982 * R + 0.6806995451 * G + 0.1073969566 * B)
   const s = Math.cbrt(0.0883024619 * R + 0.2817188376 * G + 0.6299787005 * B)
@@ -84,8 +67,83 @@ function mulberry32(seed) {
   }
 }
 
-/* ---------- star field ---------- */
+/* ---------- Orbital stream particles ---------- */
+function buildOrbitalStreams({ count, colors }) {
+  const rand = mulberry32(42069)
+  const streams = []
+  const parsedColors = colors.map(c => parseColor(c))
 
+  for (let i = 0; i < count; i++) {
+    const orbitRadius = 0.08 + rand() * 0.35
+    const speed = (0.5 + rand() * 2.5) * (rand() > 0.5 ? 1 : -1)
+    const phase = rand() * TAU
+    const eccentricity = rand() * 0.4
+    const tiltAngle = (rand() - 0.5) * Math.PI * 0.3
+    const size = 0.5 + rand() * 2.5
+    const brightness = 0.3 + rand() * 0.7
+    const colorIdx = Math.floor(rand() * parsedColors.length)
+    const color = parsedColors[colorIdx]
+    const trail = 3 + Math.floor(rand() * 12)
+    const pulseRate = 0.5 + rand() * 3
+    const pulsePhase = rand() * TAU
+    const zOffset = (rand() - 0.5) * 0.15
+
+    streams.push({
+      orbitRadius, speed, phase, eccentricity, tiltAngle,
+      size, brightness, color, trail, pulseRate, pulsePhase, zOffset,
+      sparkle: rand() < 0.15,
+      comet: rand() < 0.08,
+    })
+  }
+  return streams
+}
+
+/* ---------- Nebula clouds ---------- */
+function buildNebulaClouds({ count, colors }) {
+  const rand = mulberry32(1337)
+  const clouds = []
+  const parsedColors = colors.map(c => parseColor(c))
+
+  for (let i = 0; i < count; i++) {
+    const angle = rand() * TAU
+    const radius = 0.15 + rand() * 0.5
+    const size = 0.06 + rand() * 0.18
+    const color = parsedColors[Math.floor(rand() * parsedColors.length)]
+    const alpha = 0.02 + rand() * 0.06
+    const rotSpeed = (rand() - 0.5) * 0.3
+    const pulseRate = 0.2 + rand() * 0.8
+    const pulsePhase = rand() * TAU
+
+    clouds.push({ angle, radius, size, color, alpha, rotSpeed, pulseRate, pulsePhase })
+  }
+  return clouds
+}
+
+/* ---------- Energy arcs ---------- */
+function buildEnergyArcs({ count, colors }) {
+  const rand = mulberry32(9999)
+  const arcs = []
+  const parsedColors = colors.map(c => parseColor(c))
+
+  for (let i = 0; i < count; i++) {
+    const startAngle = rand() * TAU
+    const arcLength = 0.3 + rand() * 1.5
+    const radius = 0.1 + rand() * 0.4
+    const width = 1 + rand() * 2
+    const speed = (0.2 + rand() * 1.5) * (rand() > 0.5 ? 1 : -1)
+    const color = parsedColors[Math.floor(rand() * parsedColors.length)]
+    const alpha = 0.08 + rand() * 0.2
+    const pulseRate = 0.3 + rand() * 2
+    const pulsePhase = rand() * TAU
+    const segments = 20 + Math.floor(rand() * 40)
+    const wobble = rand() * 0.03
+
+    arcs.push({ startAngle, arcLength, radius, width, speed, color, alpha, pulseRate, pulsePhase, segments, wobble })
+  }
+  return arcs
+}
+
+/* ---------- star field ---------- */
 function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core, colors, ink }) {
   const rand = mulberry32(7831)
   const gauss = () => {
@@ -96,6 +154,7 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
 
   const c0 = toOklab(parseColor(colors[0], [123, 77, 255]))
   const c1 = toOklab(parseColor(colors[1], [255, 194, 238]))
+  const c2 = colors[2] ? toOklab(parseColor(colors[2], [0, 212, 255])) : null
   const n = Math.max(1, Math.round(arms))
   const period = TAU / n
   const N = count
@@ -104,10 +163,10 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
     count: N,
     arms: n,
     radius: new Float32Array(N),
-    angle: new Float32Array(N), // random angle for non-arm stars
-    base: new Float32Array(N), // arm index * period
-    phase0: new Float32Array(N), // starting offset inside the arm period
-    rate: new Float32Array(N), // angular speed relative to the arm pattern
+    angle: new Float32Array(N),
+    base: new Float32Array(N),
+    phase0: new Float32Array(N),
+    rate: new Float32Array(N),
     arm: new Uint8Array(N),
     z: new Float32Array(N),
     size: new Float32Array(N),
@@ -115,12 +174,16 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
     twRate: new Float32Array(N),
     twPhase: new Float32Array(N),
     color: new Float32Array(N * 3),
+    orbitSpeed: new Float32Array(N),
+    pulsePhase: new Float32Array(N),
+    pulseRate: new Float32Array(N),
+    coreStar: new Uint8Array(N),
   }
 
   for (let i = 0; i < N; i++) {
-    const bulge = innerVoid <= 0.01 && rand() < 0.1
+    const bulge = innerVoid <= 0.01 && rand() < 0.12
     let r
-    if (bulge) r = Math.min(0.6, Math.abs(gauss()) * coreSize * 1.6)
+    if (bulge) r = Math.min(0.6, Math.abs(gauss()) * coreSize * 1.8)
     else r = innerVoid + (1 - innerVoid) * Math.pow(rand(), 0.75)
 
     const inArm = !bulge && rand() < 0.84
@@ -129,15 +192,18 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
     S.angle[i] = rand() * TAU
     S.base[i] = Math.floor(rand() * n) * period
     S.phase0[i] = rand() * period
-    // Inner stars orbit faster than the pattern, outer stars barely move against it.
     S.rate[i] = 0.22 * (1 / (0.28 + r) - 0.95)
+    S.orbitSpeed[i] = (0.1 + rand() * 0.4) / (0.3 + r)
+    S.pulsePhase[i] = rand() * TAU
+    S.pulseRate[i] = 0.5 + rand() * 4
+    S.coreStar[i] = (r < coreSize * 2 && rand() < 0.3) ? 1 : 0
 
     let b = 0.3 + 0.7 * Math.pow(rand(), 1.8)
     let size = 0.55 + 0.75 * rand()
     let spark = false
-    if (rand() < sparkle * 0.07) {
+    if (rand() < sparkle * 0.09) {
       b = 0.85 + 0.15 * rand()
-      size *= 1.6 + rand() * 1.2
+      size *= 1.8 + rand() * 1.5
       spark = true
     }
     S.bright[i] = b
@@ -149,21 +215,33 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
       ? gauss() * coreSize * 0.7
       : gauss() * thickness * (0.3 + 1.4 * Math.exp(-r * 3))
 
-    // colour: outer -> inner blended in OKLab, core burns toward white
     let m = clamp(1 - Math.pow(r, 0.7) * 1.25, 0, 1)
     m = m * m * (3 - 2 * m)
     const jitter = (rand() - 0.5) * 0.06
-    const lab = [
-      c0[0] + (c1[0] - c0[0]) * m + jitter,
-      c0[1] + (c1[1] - c0[1]) * m,
-      c0[2] + (c1[2] - c0[2]) * m,
-    ]
+
+    let lab
+    if (c2 && rand() < 0.25) {
+      const t = rand()
+      lab = [
+        lerp(c0[0], c2[0], t) + jitter,
+        lerp(c0[1], c2[1], t),
+        lerp(c0[2], c2[2], t),
+      ]
+    } else {
+      lab = [
+        c0[0] + (c1[0] - c0[0]) * m + jitter,
+        c0[1] + (c1[1] - c0[1]) * m,
+        c0[2] + (c1[2] - c0[2]) * m,
+      ]
+    }
+
     const rgb = fromOklab(lab)
     if (ink) {
       for (let c = 0; c < 3; c++) rgb[c] *= 0.92
     } else {
       let white = Math.exp(-r / (coreSize * 1.5 + 0.01)) * 0.85 * Math.min(1, core * 0.8)
-      if (spark) white = Math.max(white, 0.35)
+      if (spark) white = Math.max(white, 0.4)
+      if (S.coreStar[i]) white = Math.max(white, 0.6)
       for (let c = 0; c < 3; c++) rgb[c] += (255 - rgb[c]) * white
     }
     S.color[i * 3] = rgb[0]
@@ -174,41 +252,59 @@ function buildStars({ count, arms, innerVoid, thickness, sparkle, coreSize, core
 }
 
 /* ---------- component ---------- */
-
 const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
   const {
     colors = DEFAULT_COLORS,
-    backgroundColor = '#0A0A0A',
+    backgroundColor = '#050510',
     mode = 'auto',
-    stars = 70000,
-    starSize = 1.7,
-    sparkle = 0.5,
-    arms = 3,
-    twist = 3.5,
-    armStrength = 0.5,
+    stars = 85000,
+    starSize = 1.8,
+    sparkle = 0.6,
+    arms = 4,
+    twist = 4.0,
+    armStrength = 0.55,
     dust = 0.5,
-    core = 1,
-    coreSize = 0.07,
+    core = 1.2,
+    coreSize = 0.09,
     innerVoid = 0,
-    thickness = 0.02,
+    thickness = 0.025,
     tilt = 62,
     roll = -8,
     scale = 1,
     centerX = 0.5,
     centerY = 0.52,
     speed = 1,
-    twinkle = 0.35,
+    twinkle = 0.4,
     depth = 0.4,
-    glow = 0.45,
+    glow = 0.6,
     intensity = 1,
     interactive = true,
     hoverWake = true,
     clickRipple = true,
     wakeStrength = 1,
-    rippleStrength = 1,
+    rippleStrength = 10,
     hoverBoost = 0.5,
     paused = false,
     quality = 1,
+    // New advanced props
+    orbitalStreams = 200,
+    nebulaClouds = 25,
+    energyArcs = 8,
+    coreGlow = 1.5,
+    corePulse = true,
+    coreRays = true,
+    coreRayCount = 6,
+    gravitationalLensing = true,
+    lensingStrength = 0.3,
+    particleTrails = true,
+    bloomIntensity = 0.6,
+    colorShift = true,
+    colorShiftSpeed = 0.1,
+    vortexEffect = true,
+    vortexStrength = 0.3,
+    shockwaveOnClick = true,
+    magneticFieldLines = true,
+    starBurst = false,
     children,
     className,
     style,
@@ -216,72 +312,79 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
 
   const rootRef = useRef(null)
   const canvasRef = useRef(null)
+  const glowCanvasRef = useRef(null)
   const ringsRef = useRef([])
+  const shockwavesRef = useRef([])
 
-  const bg = parseColor(backgroundColor, [10, 10, 10])
+  const bg = parseColor(backgroundColor, [5, 5, 16])
   const ink = mode === 'ink' || (mode === 'auto' && (0.299 * bg[0] + 0.587 * bg[1] + 0.114 * bg[2]) / 255 > 0.55)
 
   const starData = useMemo(
-    () =>
-      buildStars({
-        count: clamp(Math.round(stars), 2000, 250000),
-        arms,
-        innerVoid: clamp(innerVoid, 0, 0.6),
-        thickness,
-        sparkle: clamp(sparkle, 0, 1),
-        coreSize,
-        core,
-        colors: [colors[0], colors[1]],
-        ink,
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [stars, arms, innerVoid, thickness, sparkle, coreSize, core, colors[0], colors[1], ink],
+    () => buildStars({
+      count: clamp(Math.round(stars), 2000, 300000),
+      arms, innerVoid: clamp(innerVoid, 0, 0.6),
+      thickness, sparkle: clamp(sparkle, 0, 1),
+      coreSize, core, colors: [colors[0], colors[1], colors[2]], ink,
+    }),
+    [stars, arms, innerVoid, thickness, sparkle, coreSize, core, colors[0], colors[1], colors[2], ink],
+  )
+
+  const streamData = useMemo(
+    () => buildOrbitalStreams({ count: orbitalStreams, colors }),
+    [orbitalStreams, colors[0], colors[1]],
+  )
+
+  const nebulaData = useMemo(
+    () => buildNebulaClouds({ count: nebulaClouds, colors }),
+    [nebulaClouds, colors[0], colors[1]],
+  )
+
+  const arcData = useMemo(
+    () => buildEnergyArcs({ count: energyArcs, colors }),
+    [energyArcs, colors[0], colors[1]],
   )
 
   const live = {
-    S: starData,
-    bg,
-    ink,
+    S: starData, bg, ink,
+    c0: parseColor(colors[0], [123, 77, 255]),
     c1: parseColor(colors[1], [255, 194, 238]),
-    starSize,
-    twist,
-    armStrength: clamp(armStrength, 0, 1),
-    dust: clamp(dust, 0, 1),
-    coreSize,
-    core,
-    tilt,
-    roll,
-    scale,
-    centerX,
-    centerY,
-    speed,
-    twinkle: clamp(twinkle, 0, 1),
-    depth: clamp(depth, 0, 1),
-    glow,
-    intensity,
-    interactive,
-    hoverWake,
-    clickRipple,
-    wakeStrength,
-    rippleStrength,
-    hoverBoost,
-    paused,
+    c2: parseColor(colors[2] || '#00D4FF', [0, 212, 255]),
+    c3: parseColor(colors[3] || '#FFD700', [255, 215, 0]),
+    starSize, twist, armStrength: clamp(armStrength, 0, 1),
+    dust: clamp(dust, 0, 1), coreSize, core, tilt, roll, scale,
+    centerX, centerY, speed, twinkle: clamp(twinkle, 0, 1),
+    depth: clamp(depth, 0, 1), glow, intensity,
+    interactive, hoverWake, clickRipple, wakeStrength,
+    rippleStrength, hoverBoost, paused,
     quality: clamp(quality, 0.25, 1),
+    coreGlow, corePulse, coreRays, coreRayCount,
+    gravitationalLensing, lensingStrength,
+    particleTrails, bloomIntensity,
+    colorShift, colorShiftSpeed, vortexEffect, vortexStrength,
+    shockwaveOnClick, magneticFieldLines, starBurst,
+    streams: streamData, nebulae: nebulaData, arcs: arcData,
   }
   const liveRef = useRef(live)
-  useEffect(() => {
-    liveRef.current = live
-  })
+  useEffect(() => { liveRef.current = live })
 
-  useImperativeHandle(
-    ref,
-    () => ({
-      ripple: (strength = 1) => {
-        ringsRef.current.push({ x: 0, y: 0, t: 0, s: strength })
-      },
-    }),
-    [],
-  )
+  useImperativeHandle(ref, () => ({
+    ripple: (strength = 1) => {
+      ringsRef.current.push({ x: 0, y: 0, t: 0, s: strength })
+    },
+    shockwave: (strength = 1) => {
+      shockwavesRef.current.push({ t: 0, s: strength })
+    },
+    burst: () => {
+      const L = liveRef.current
+      for (let i = 0; i < 50; i++) {
+        ringsRef.current.push({
+          x: (Math.random() - 0.5) * 0.3,
+          y: (Math.random() - 0.5) * 0.3,
+          t: 0, s: 2 + Math.random() * 5
+        })
+      }
+    },
+  }), [])
 
   useEffect(() => {
     const root = rootRef.current
@@ -291,39 +394,30 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
 
     const small = document.createElement('canvas')
     const sctx = small.getContext('2d')
+    const bloom = document.createElement('canvas')
+    const bctx = bloom.getContext('2d')
 
     const mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
     let reduced = !!(mq && mq.matches)
-    const onMotion = (e) => {
-      reduced = e.matches
-      dirty = true
-    }
+    const onMotion = (e) => { reduced = e.matches; dirty = true }
     if (mq && mq.addEventListener) mq.addEventListener('change', onMotion)
 
-    let bw = 2
-    let bh = 2
-    let k = 1
-    let img = null
-    let data = null
-    let u32 = null
-    let raf = 0
-    let last = 0
-    let dirty = true
-    let lastQuality = -1
-    let lastLive = null
-    let curStars = null
-    let dr = null
-    let dth = null
-    let wk = null
+    let bw = 2, bh = 2, k = 1
+    let img = null, data = null, u32 = null
+    let raf = 0, last = 0, dirty = true, lastQuality = -1
+    let lastLive = null, curStars = null
+    let dr = null, dth = null, wk = null
 
-    let pat = 0
-    let orbitT = 0
-    let twT = 0
-    let hover = 0
-    let wakeLevel = 0
+    let pat = 0, orbitT = 0, twT = 0, globalT = 0
+    let hover = 0, wakeLevel = 0
+    let colorHue = 0
 
     const pointer = { x: 0, y: 0, lx: 0, ly: 0, active: false }
     const geom = { cx: 0, cy: 0, R: 1, cosR: 1, sinR: 0, cosT: 1 }
+
+    // Trail buffer for orbital streams
+    const trailBuf = new Float32Array(2000 * 2)
+    let trailIdx = 0
 
     const resize = () => {
       const rect = root.getBoundingClientRect()
@@ -332,7 +426,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       const q = liveRef.current.quality
       let s = Math.min(window.devicePixelRatio || 1, 2) * q
       const px = cssW * cssH * s * s
-      if (px > 2.6e6) s *= Math.sqrt(2.6e6 / px)
+      if (px > 3.2e6) s *= Math.sqrt(3.2e6 / px)
       bw = Math.max(2, Math.round(cssW * s))
       bh = Math.max(2, Math.round(cssH * s))
       k = bw / cssW
@@ -343,13 +437,14 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       u32 = new Uint32Array(data.buffer)
       small.width = Math.max(2, bw >> 3)
       small.height = Math.max(2, bh >> 3)
+      bloom.width = Math.max(2, bw >> 2)
+      bloom.height = Math.max(2, bh >> 2)
       lastQuality = q
       dirty = true
     }
 
     const toPlane = (bx, by) => {
-      const dx = bx - geom.cx
-      const dy = by - geom.cy
+      const dx = bx - geom.cx, dy = by - geom.cy
       const X = (dx * geom.cosR + dy * geom.sinR) / geom.R
       const Y = (-dx * geom.sinR + dy * geom.cosR) / geom.R
       return { x: X, y: Y / Math.max(geom.cosT, 0.12) }
@@ -359,22 +454,20 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       const rect = root.getBoundingClientRect()
       pointer.x = e.clientX - rect.left
       pointer.y = e.clientY - rect.top
-      if (!pointer.active) {
-        pointer.lx = pointer.x * k
-        pointer.ly = pointer.y * k
-      }
+      if (!pointer.active) { pointer.lx = pointer.x * k; pointer.ly = pointer.y * k }
       pointer.active = true
     }
     const onMove = (e) => setPointer(e)
-    const onLeave = () => {
-      pointer.active = false
-    }
+    const onLeave = () => { pointer.active = false }
     const onDown = (e) => {
       const L = liveRef.current
-      if (!L.interactive || !L.clickRipple || reduced) return
+      if (!L.interactive || reduced) return
       setPointer(e)
       const p = toPlane(pointer.x * k, pointer.y * k)
-      if (ringsRef.current.length < 6) ringsRef.current.push({ x: p.x, y: p.y, t: 0, s: L.rippleStrength })
+      if (L.clickRipple && ringsRef.current.length < 8)
+        ringsRef.current.push({ x: p.x, y: p.y, t: 0, s: L.rippleStrength })
+      if (L.shockwaveOnClick)
+        shockwavesRef.current.push({ t: 0, s: 1 })
       dirty = true
     }
 
@@ -394,10 +487,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       last = now
 
       if (L.quality !== lastQuality) resize()
-      if (L !== lastLive) {
-        lastLive = L
-        dirty = true
-      }
+      if (L !== lastLive) { lastLive = L; dirty = true }
       const S = L.S
       if (S !== curStars) {
         curStars = S
@@ -410,73 +500,64 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       const interactive = L.interactive && !reduced
       const frozen = L.paused || reduced
       const rings = ringsRef.current
-      if (reduced) rings.length = 0
+      const shockwaves = shockwavesRef.current
+      if (reduced) { rings.length = 0; shockwaves.length = 0 }
 
       const pointerLive = interactive && pointer.active
       const hoverTarget = pointerLive ? 1 : 0
       const hoverMoving = Math.abs(hover - hoverTarget) > 0.003
-      const busy = rings.length > 0 || wakeLevel > 0.004 || hoverMoving || pointerLive
+      const busy = rings.length > 0 || shockwaves.length > 0 || wakeLevel > 0.004 || hoverMoving || pointerLive
       if (frozen && !dirty && !busy) return
       dirty = false
 
-      /* time */
       hover += (hoverTarget - hover) * Math.min(1, dt * 4)
       if (!frozen) {
         const dts = dt * L.speed * (1 + L.hoverBoost * hover)
         pat += dts * 0.03
         orbitT += dts
         twT += dt
+        globalT += dt
+        if (L.colorShift) colorHue += dt * L.colorShiftSpeed
       }
 
-      /* geometry */
       const tiltRad = (clamp(L.tilt, 0, 85) * Math.PI) / 180
-      const cosT = Math.cos(tiltRad)
-      const sinT = Math.sin(tiltRad)
+      const cosT = Math.cos(tiltRad), sinT = Math.sin(tiltRad)
       const rollRad = (L.roll * Math.PI) / 180
-      const cosR = Math.cos(rollRad)
-      const sinR = Math.sin(rollRad)
-      const cx = bw * L.centerX
-      const cy = bh * L.centerY
+      const cosR = Math.cos(rollRad), sinR = Math.sin(rollRad)
+      const cx = bw * L.centerX, cy = bh * L.centerY
       const R = Math.min(bw * 0.48, (bh * 0.5) / Math.max(cosT, 0.3)) * L.scale
-      geom.cx = cx
-      geom.cy = cy
-      geom.R = R
-      geom.cosR = cosR
-      geom.sinR = sinR
-      geom.cosT = cosT
+      geom.cx = cx; geom.cy = cy; geom.R = R
+      geom.cosR = cosR; geom.sinR = sinR; geom.cosT = cosT
 
-      /* click / ripple rings */
+      // Shockwaves
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        shockwaves[i].t += dt
+        if (shockwaves[i].t > 4) shockwaves.splice(i, 1)
+      }
+
+      // Ripple rings
       for (let i = rings.length - 1; i >= 0; i--) {
         rings[i].t += dt
-        if (rings[i].t > 3.2) rings.splice(i, 1)
+        if (rings[i].t > 3.5) rings.splice(i, 1)
       }
       const ringState = rings.map((r) => {
-        const wid = 0.05 + 0.03 * r.t
-        const fade = 1 - r.t / 3.2
-        return { x: r.x, y: r.y, rho: 0.34 * r.t, wid, amp: 0.035 * r.s * fade * fade, boost: r.s * fade }
+        const wid = 0.05 + 0.04 * r.t
+        const fade = 1 - r.t / 3.5
+        return { x: r.x, y: r.y, rho: 0.38 * r.t, wid, amp: 0.04 * r.s * fade * fade, boost: r.s * fade }
       })
 
-      /* hover wake */
-      let wakeOn = false
-      let gain = 0
-      let pbx = 0
-      let pby = 0
-      let thp = 0
-      let rp = 0
-      let wr2 = 1
+      // Hover wake
+      let wakeOn = false, gain = 0, pbx = 0, pby = 0, thp = 0, rp = 0, wr2 = 1
       if (pointerLive && L.hoverWake) {
-        pbx = pointer.x * k
-        pby = pointer.y * k
+        pbx = pointer.x * k; pby = pointer.y * k
         const moved = Math.hypot(pbx - pointer.lx, pby - pointer.ly)
-        pointer.lx = pbx
-        pointer.ly = pby
+        pointer.lx = pbx; pointer.ly = pby
         const act = clamp(moved / (R * 0.035), 0, 1)
         if (act > 0.02 && L.wakeStrength > 0) {
           const p = toPlane(pbx, pby)
-          thp = Math.atan2(p.y, p.x)
-          rp = Math.hypot(p.x, p.y)
-          wr2 = (R * 0.12) * (R * 0.12)
-          gain = L.wakeStrength * act * 0.18 * dt * 60
+          thp = Math.atan2(p.y, p.x); rp = Math.hypot(p.x, p.y)
+          wr2 = (R * 0.14) * (R * 0.14)
+          gain = L.wakeStrength * act * 0.2 * dt * 60
           wakeOn = true
           wakeLevel = Math.max(wakeLevel, act)
         }
@@ -486,8 +567,9 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       const decayA = Math.exp(-dt * 0.55)
       const decayW = Math.exp(-dt * 0.5)
 
-      /* per-star loop */
-      const ink = L.ink
+      // Core pulse
+      const corePulseVal = L.corePulse ? 0.85 + 0.15 * Math.sin(globalT * 1.2) : 1
+
       const bgPacked = (255 << 24) | (L.bg[2] << 16) | (L.bg[1] << 8) | L.bg[0]
       u32.fill(bgPacked)
 
@@ -504,10 +586,17 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       const baseSize = L.starSize * k
       const [warmR, warmG, warmB] = L.c1
 
+      // Vortex effect parameters
+      const vortexActive = L.vortexEffect
+      const vortexStr = L.vortexStrength
+
+      // Color shift
+      const hueShift = colorHue * TAU
+
       const plot = (sx, sy, size, cr, cg, cb, al) => {
+        if (al < 0.003) return
         if (size < 1.25) {
-          const ix = sx | 0
-          const iy = sy | 0
+          const ix = sx | 0, iy = sy | 0
           if (ix < 0 || iy < 0 || ix >= bw || iy >= bh) return
           const a = al * Math.min(1, size * 0.85)
           const idx = (iy * bw + ix) << 2
@@ -517,9 +606,9 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
             data[idx + 1] += (cg - data[idx + 1]) * f
             data[idx + 2] += (cb - data[idx + 2]) * f
           } else {
-            data[idx] += cr * a
-            data[idx + 1] += cg * a
-            data[idx + 2] += cb * a
+            data[idx] = Math.min(255, data[idx] + cr * a)
+            data[idx + 1] = Math.min(255, data[idx + 1] + cg * a)
+            data[idx + 2] = Math.min(255, data[idx + 2] + cb * a)
           }
           return
         }
@@ -531,11 +620,10 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         const inv = 1 / (half + 0.5)
         for (let yy = y0; yy <= y1; yy++) {
           for (let xx = x0; xx <= x1; xx++) {
-            const ddx = xx + 0.5 - sx
-            const ddy = yy + 0.5 - sy
+            const ddx = xx + 0.5 - sx, ddy = yy + 0.5 - sy
             const d = Math.sqrt(ddx * ddx + ddy * ddy) * inv
             if (d >= 1) continue
-            const a = al * (1 - d)
+            const a = al * (1 - d * d)
             const idx = (yy * bw + xx) << 2
             if (ink) {
               const f = Math.min(1, a)
@@ -543,29 +631,69 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
               data[idx + 1] += (cg - data[idx + 1]) * f
               data[idx + 2] += (cb - data[idx + 2]) * f
             } else {
-              data[idx] += cr * a
-              data[idx + 1] += cg * a
-              data[idx + 2] += cb * a
+              data[idx] = Math.min(255, data[idx] + cr * a)
+              data[idx + 1] = Math.min(255, data[idx + 1] + cg * a)
+              data[idx + 2] = Math.min(255, data[idx + 2] + cb * a)
             }
           }
         }
       }
 
+      // Plot soft glow dot (for streams, bigger and softer)
+      const plotGlow = (sx, sy, radius, cr, cg, cb, al) => {
+        if (al < 0.002) return
+        const x0 = Math.max(0, Math.floor(sx - radius))
+        const x1 = Math.min(bw - 1, Math.ceil(sx + radius))
+        const y0 = Math.max(0, Math.floor(sy - radius))
+        const y1 = Math.min(bh - 1, Math.ceil(sy + radius))
+        const inv = 1 / (radius * radius)
+        for (let yy = y0; yy <= y1; yy++) {
+          for (let xx = x0; xx <= x1; xx++) {
+            const ddx = xx + 0.5 - sx, ddy = yy + 0.5 - sy
+            const d2 = ddx * ddx + ddy * ddy
+            if (d2 >= radius * radius) continue
+            const falloff = Math.exp(-d2 * inv * 3)
+            const a = al * falloff
+            const idx = (yy * bw + xx) << 2
+            data[idx] = Math.min(255, data[idx] + cr * a)
+            data[idx + 1] = Math.min(255, data[idx + 1] + cg * a)
+            data[idx + 2] = Math.min(255, data[idx + 2] + cb * a)
+          }
+        }
+      }
+
+      // Apply color hue shift to RGB
+      const shiftColor = (r, g, b) => {
+        if (!L.colorShift || hueShift < 0.001) return [r, g, b]
+        const cos = Math.cos(hueShift), sin = Math.sin(hueShift)
+        const matrix = [
+          0.213 + cos * 0.787 - sin * 0.213,
+          0.715 - cos * 0.715 - sin * 0.715,
+          0.072 - cos * 0.072 + sin * 0.928,
+          0.213 - cos * 0.213 + sin * 0.143,
+          0.715 + cos * 0.285 + sin * 0.140,
+          0.072 - cos * 0.072 - sin * 0.283,
+          0.213 - cos * 0.213 - sin * 0.787,
+          0.715 - cos * 0.715 + sin * 0.715,
+          0.072 + cos * 0.928 + sin * 0.072,
+        ]
+        return [
+          clamp(r * matrix[0] + g * matrix[1] + b * matrix[2], 0, 255),
+          clamp(r * matrix[3] + g * matrix[4] + b * matrix[5], 0, 255),
+          clamp(r * matrix[6] + g * matrix[7] + b * matrix[8], 0, 255),
+        ]
+      }
+
+      // --- RENDER STARS ---
       for (let i = 0; i < N; i++) {
         if (relax) {
-          dth[i] *= decayA
-          dr[i] *= decayA
-          wk[i] *= decayW
+          dth[i] *= decayA; dr[i] *= decayA; wk[i] *= decayW
         }
         let rr = S.radius[i] + dr[i]
-        if (rr < 0) rr = 0
-        else if (rr > 1.2) rr = 1.2
+        if (rr < 0) rr = 0; else if (rr > 1.2) rr = 1.2
 
-        let a
-        let wgt = 1
+        let a, wgt = 1
         if (S.arm[i]) {
-          // Position relative to the arm centre drifts at the star's own rate,
-          // so stars stream through the arms while the pattern holds its shape.
           let o = S.phase0[i] + S.rate[i] * orbitT
           o -= period * Math.floor(o / period + 0.5)
           a = S.base[i] + rr * twist2 + o + pat + dth[i]
@@ -579,56 +707,93 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         } else {
           a = S.angle[i] + pat + S.rate[i] * orbitT + dth[i]
         }
+
+        // Vortex effect: additional angular velocity near core
+        if (vortexActive && rr < 0.3) {
+          const vortexFactor = (1 - rr / 0.3) * vortexStr
+          a += vortexFactor * Math.sin(globalT * 0.5 + rr * 10) * 0.15
+        }
+
         const wki = wk[i]
         if (wki > 0.001) {
           wgt += (1 - wgt) * wki
           if (relax) dth[i] += dt * 0.9 * (1 - Math.min(rr, 1)) * wki
         }
 
-        let x = rr * Math.cos(a)
-        let y = rr * Math.sin(a)
+        let x = rr * Math.cos(a), y = rr * Math.sin(a)
         const zz = S.z[i]
 
-        let cr = S.color[i * 3]
-        let cg = S.color[i * 3 + 1]
-        let cb = S.color[i * 3 + 2]
+        let cr = S.color[i * 3], cg = S.color[i * 3 + 1], cb = S.color[i * 3 + 2]
         let boost = 1
 
+        // Gravitational lensing near core
+        if (L.gravitationalLensing && rr < L.coreSize * 4) {
+          const lensFactor = L.lensingStrength * Math.exp(-rr / (L.coreSize * 1.5))
+          const lensAngle = a + lensFactor * Math.sin(globalT * 0.3)
+          x = rr * Math.cos(lensAngle)
+          y = rr * Math.sin(lensAngle)
+          boost += lensFactor * 2
+        }
+
+        // Shockwave displacement
+        for (let sw = 0; sw < shockwaves.length; sw++) {
+          const shock = shockwaves[sw]
+          const shockR = shock.t * 0.5
+          const dist = Math.sqrt(x * x + y * y)
+          const diff = Math.abs(dist - shockR)
+          if (diff < 0.08) {
+            const infl = Math.exp(-(diff * diff) / 0.003) * shock.s * (1 - shock.t / 4)
+            const angle = Math.atan2(y, x)
+            x += Math.cos(angle) * infl * 0.04
+            y += Math.sin(angle) * infl * 0.04
+            boost += infl * 3
+            cr = lerp(cr, 255, infl * 0.4)
+            cg = lerp(cg, 255, infl * 0.3)
+            cb = lerp(cb, 255, infl * 0.2)
+          }
+        }
+
+        // Ripple rings
         for (let g = 0; g < ringState.length; g++) {
           const rg = ringState[g]
-          const ddx = x - rg.x
-          const ddy = y - rg.y
+          const ddx = x - rg.x, ddy = y - rg.y
           const d = Math.sqrt(ddx * ddx + ddy * ddy) || 1e-6
           const e = (d - rg.rho) / rg.wid
           if (e > 3 || e < -3) continue
           const infl = Math.exp(-e * e)
           x += (ddx / d) * rg.amp * infl
           y += (ddy / d) * rg.amp * infl
-          boost += 1.6 * rg.boost * infl
+          boost += 1.8 * rg.boost * infl
           const mix = Math.min(1, infl * 0.7 * rg.boost)
-          cr += (warmR - cr) * mix
-          cg += (warmG - cg) * mix
-          cb += (warmB - cb) * mix
+          cr += (warmR - cr) * mix; cg += (warmG - cg) * mix; cb += (warmB - cb) * mix
         }
 
-        // tilt + roll
-        const y1 = y * cosT - zz * sinT
+        // Apply color shift
+        if (L.colorShift) {
+          const shifted = shiftColor(cr, cg, cb);
+          cr = shifted[0]; cg = shifted[1]; cb = shifted[2]
+        }
+
+        // Core star pulse
+        if (S.coreStar[i] && L.corePulse) {
+          boost *= corePulseVal
+          const pulse = 0.5 + 0.5 * Math.sin(globalT * S.pulseRate[i] + S.pulsePhase[i])
+          boost += pulse * 0.8
+        }
+
+        const y1t = y * cosT - zz * sinT
         const dep = y * sinT + zz * cosT
-        const X = x * cosR - y1 * sinR
-        const Y = x * sinR + y1 * cosR
-        const sx = cx + X * R
-        const sy = cy + Y * R
+        const X = x * cosR - y1t * sinR
+        const Y = x * sinR + y1t * cosR
+        const sx = cx + X * R, sy = cy + Y * R
 
         if (wakeOn) {
-          const ddx = sx - pbx
-          const ddy = sy - pby
+          const ddx = sx - pbx, ddy = sy - pby
           const d2 = ddx * ddx + ddy * ddy
           if (d2 < wr2) {
             const f = 1 - d2 / wr2
-            let dd = thp - a
-            dd -= TAU * Math.round(dd / TAU)
-            dth[i] += dd * gain * f
-            dr[i] += (rp - rr) * gain * f
+            let dd = thp - a; dd -= TAU * Math.round(dd / TAU)
+            dth[i] += dd * gain * f; dr[i] += (rp - rr) * gain * f
             wk[i] = Math.min(1, wk[i] + gain * f * 1.4)
           }
         }
@@ -636,42 +801,404 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         const df = 1 + depthAmt * 0.5 * dep
         const edge = clamp((1.02 - rr) / 0.2, 0, 1)
         const twk = 1 - tw * 0.5 * (1 + Math.sin(twT * S.twRate[i] + S.twPhase[i]))
-        const al = S.bright[i] * wgt * df * edge * twk * intens * boost * (1 + 0.8 * wki) * 0.62
+        const al = S.bright[i] * wgt * df * edge * twk * intens * boost * (1 + 0.8 * wki) * 0.65
         if (al < 0.004) continue
 
-        const size = baseSize * S.size[i] * (1 + 0.3 * dep)
+        const size = baseSize * S.size[i] * (1 + 0.3 * dep) * (S.coreStar[i] ? corePulseVal * 1.3 : 1)
         plot(sx, sy, size, cr, cg, cb, al)
+      }
+
+      // --- RENDER ORBITAL STREAMS (circular motion through center) ---
+      const streams = L.streams
+      for (let i = 0; i < streams.length; i++) {
+        const s = streams[i]
+        const angle = s.phase + s.speed * globalT
+        const rMod = s.orbitRadius * (1 + s.eccentricity * Math.sin(angle * 0.5))
+
+        // Circular motion through the center glow
+        const x0 = rMod * Math.cos(angle)
+        const y0 = rMod * Math.sin(angle) * Math.cos(s.tiltAngle)
+        const z0 = rMod * Math.sin(angle) * Math.sin(s.tiltAngle) + s.zOffset
+
+        const pulse = 0.6 + 0.4 * Math.sin(globalT * s.pulseRate + s.pulsePhase)
+        let [cr, cg, cb] = s.color
+        if (L.colorShift) {
+          const shifted = shiftColor(cr, cg, cb);
+          cr = shifted[0]; cg = shifted[1]; cb = shifted[2]
+        }
+
+        // Transform to screen
+        const yTilt = y0 * cosT - z0 * sinT
+        const X = x0 * cosR - yTilt * sinR
+        const Y = x0 * sinR + yTilt * cosR
+        const sx = cx + X * R, sy = cy + Y * R
+
+        if (sx < -20 || sx > bw + 20 || sy < -20 || sy > bh + 20) continue
+
+        const brightness = s.brightness * pulse * intens
+
+        // Draw trail if enabled
+        if (L.particleTrails && s.trail > 0) {
+          for (let t = 1; t <= s.trail; t++) {
+            const trailAngle = angle - t * 0.015 * Math.sign(s.speed)
+            const trailRM = s.orbitRadius * (1 + s.eccentricity * Math.sin(trailAngle * 0.5))
+            const tx = trailRM * Math.cos(trailAngle)
+            const ty = trailRM * Math.sin(trailAngle) * Math.cos(s.tiltAngle)
+            const tz = trailRM * Math.sin(trailAngle) * Math.sin(s.tiltAngle) + s.zOffset
+            const tyT = ty * cosT - tz * sinT
+            const TX = tx * cosR - tyT * sinR
+            const TY = tx * sinR + tyT * cosR
+            const tsx = cx + TX * R, tsy = cy + TY * R
+            const trailFade = 1 - t / (s.trail + 1)
+            const trailAl = brightness * trailFade * trailFade * 0.3
+            const trailSize = s.size * k * 0.5 * trailFade
+            plot(tsx, tsy, trailSize, cr, cg, cb, trailAl)
+          }
+        }
+
+        // Main particle
+        const mainSize = s.size * k * (s.sparkle ? (1.2 + 0.8 * Math.sin(globalT * 8 + s.pulsePhase)) : 1)
+
+        if (s.comet) {
+          plotGlow(sx, sy, mainSize * 3, cr, cg, cb, brightness * 0.15)
+        }
+
+        plot(sx, sy, mainSize, cr, cg, cb, brightness * 0.85)
+
+        // Extra glow for sparkly ones
+        if (s.sparkle) {
+          plotGlow(sx, sy, mainSize * 2.5, cr, cg, cb, brightness * 0.12)
+        }
       }
 
       ctx.putImageData(img, 0, 0)
 
-      /* glow haze + core */
-      if (!ink && (L.glow > 0 || L.core > 0)) {
+      // --- POST-PROCESSING with Canvas 2D ---
+
+      // Energy arcs
+      if (!ink) {
         ctx.save()
         ctx.globalCompositeOperation = 'lighter'
+        const arcs = L.arcs
+        for (let i = 0; i < arcs.length; i++) {
+          const arc = arcs[i]
+          const baseAngle = arc.startAngle + arc.speed * globalT
+          const pulse = 0.5 + 0.5 * Math.sin(globalT * arc.pulseRate + arc.pulsePhase)
+          let [cr, cg, cb] = arc.color
+          if (L.colorShift) {
+            const shifted = shiftColor(cr, cg, cb);
+            cr = shifted[0]; cg = shifted[1]; cb = shifted[2]
+          }
+
+          ctx.beginPath()
+          ctx.strokeStyle = `rgba(${Math.round(cr)},${Math.round(cg)},${Math.round(cb)},${arc.alpha * pulse})`
+          ctx.lineWidth = arc.width * k
+          ctx.lineCap = 'round'
+
+          for (let j = 0; j <= arc.segments; j++) {
+            const t = j / arc.segments
+            const angle = baseAngle + t * arc.arcLength
+            const r = arc.radius + arc.wobble * Math.sin(angle * 8 + globalT * 3)
+            const px = r * Math.cos(angle), py = r * Math.sin(angle)
+            const pyT = py * cosT
+            const X = px * cosR - pyT * sinR
+            const Y = px * sinR + pyT * cosR
+            const sx = cx + X * R, sy = cy + Y * R
+            if (j === 0) ctx.moveTo(sx, sy)
+            else ctx.lineTo(sx, sy)
+          }
+          ctx.stroke()
+        }
+        ctx.restore()
+      }
+
+      // Magnetic field lines
+      if (!ink && L.magneticFieldLines) {
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+        ctx.globalAlpha = 0.04 + 0.02 * Math.sin(globalT * 0.5)
+        const fieldLines = 12
+        for (let i = 0; i < fieldLines; i++) {
+          const baseAngle = (i / fieldLines) * TAU + globalT * 0.05
+          ctx.beginPath()
+          const [mr, mg, mb] = L.colorShift ? shiftColor(...L.c0) : L.c0
+          ctx.strokeStyle = `rgba(${Math.round(mr)},${Math.round(mg)},${Math.round(mb)},0.15)`
+          ctx.lineWidth = 0.5 * k
+          for (let j = 0; j <= 60; j++) {
+            const t = j / 60
+            const r = t * 0.5
+            const angle = baseAngle + t * TAU * 0.3
+            const px = r * Math.cos(angle), py = r * Math.sin(angle)
+            const pyT = py * cosT
+            const X = px * cosR - pyT * sinR
+            const Y = px * sinR + pyT * cosR
+            const sx = cx + X * R, sy = cy + Y * R
+            if (j === 0) ctx.moveTo(sx, sy)
+            else ctx.lineTo(sx, sy)
+          }
+          ctx.stroke()
+        }
+        ctx.restore()
+      }
+
+      // Shockwave rings
+      if (!ink) {
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+        for (let i = 0; i < shockwaves.length; i++) {
+          const sw = shockwaves[i]
+          const shockR = sw.t * 0.5 * R
+          const fade = Math.max(0, 1 - sw.t / 4)
+          const width = (2 + sw.t * 3) * k
+          const [sr, sg, sb] = L.colorShift ? shiftColor(...L.c2) : L.c2
+
+          ctx.beginPath()
+          ctx.translate(cx, cy)
+          ctx.rotate(rollRad)
+          ctx.scale(1, cosT)
+          ctx.arc(0, 0, shockR, 0, TAU)
+          ctx.setTransform(1, 0, 0, 1, 0, 0)
+          ctx.strokeStyle = `rgba(${Math.round(sr)},${Math.round(sg)},${Math.round(sb)},${fade * 0.4 * sw.s})`
+          ctx.lineWidth = width
+          ctx.stroke()
+
+          // Inner bright ring
+          ctx.beginPath()
+          ctx.translate(cx, cy)
+          ctx.rotate(rollRad)
+          ctx.scale(1, cosT)
+          ctx.arc(0, 0, shockR * 0.95, 0, TAU)
+          ctx.setTransform(1, 0, 0, 1, 0, 0)
+          ctx.strokeStyle = `rgba(255,255,255,${fade * 0.2 * sw.s})`
+          ctx.lineWidth = width * 0.3
+          ctx.stroke()
+        }
+        ctx.restore()
+      }
+
+      // Nebula clouds
+      if (!ink && L.nebulae.length > 0) {
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+        const nebulae = L.nebulae
+        for (let i = 0; i < nebulae.length; i++) {
+          const n = nebulae[i]
+          const angle = n.angle + n.rotSpeed * globalT
+          const pulse = 0.7 + 0.3 * Math.sin(globalT * n.pulseRate + n.pulsePhase)
+          const px = n.radius * Math.cos(angle), py = n.radius * Math.sin(angle)
+          const pyT = py * cosT
+          const X = px * cosR - pyT * sinR
+          const Y = px * sinR + pyT * cosR
+          const sx = cx + X * R, sy = cy + Y * R
+          const cloudR = n.size * R
+
+          let [cr, cg, cb] = n.color
+          if (L.colorShift) {
+            const shifted = shiftColor(cr, cg, cb);
+            cr = shifted[0]; cg = shifted[1]; cb = shifted[2]
+          }
+
+          const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, cloudR)
+          grad.addColorStop(0, `rgba(${Math.round(cr)},${Math.round(cg)},${Math.round(cb)},${n.alpha * pulse})`)
+          grad.addColorStop(0.4, `rgba(${Math.round(cr)},${Math.round(cg)},${Math.round(cb)},${n.alpha * pulse * 0.4})`)
+          grad.addColorStop(1, 'rgba(0,0,0,0)')
+          ctx.fillStyle = grad
+          ctx.fillRect(sx - cloudR, sy - cloudR, cloudR * 2, cloudR * 2)
+        }
+        ctx.restore()
+      }
+
+      // Glow + Core + Bloom + Core Rays
+      if (!ink && (L.glow > 0 || L.core > 0 || L.coreGlow > 0)) {
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+
+        // Base glow
         if (L.glow > 0) {
           sctx.clearRect(0, 0, small.width, small.height)
           sctx.drawImage(canvas, 0, 0, small.width, small.height)
-          ctx.globalAlpha = clamp(L.glow * 0.5, 0, 1)
+          ctx.globalAlpha = clamp(L.glow * 0.55, 0, 1)
           ctx.imageSmoothingEnabled = true
           ctx.drawImage(small, 0, 0, bw, bh)
           ctx.globalAlpha = 1
         }
-        const coreAlpha = Math.min(0.9, 0.28 * L.core * (0.4 + L.glow))
-        if (coreAlpha > 0.001) {
-          const cR = R * (0.05 + L.coreSize * 4.5)
-          const wr = Math.round(warmR + (255 - warmR) * 0.6)
-          const wg = Math.round(warmG + (255 - warmG) * 0.6)
-          const wb = Math.round(warmB + (255 - warmB) * 0.6)
+
+        // Bloom pass
+        if (L.bloomIntensity > 0) {
+          bctx.clearRect(0, 0, bloom.width, bloom.height)
+          bctx.drawImage(canvas, 0, 0, bloom.width, bloom.height)
+          ctx.globalAlpha = clamp(L.bloomIntensity * 0.35, 0, 1)
+          ctx.filter = 'blur(2px)'
+          ctx.drawImage(bloom, 0, 0, bw, bh)
+          ctx.filter = 'none'
+          ctx.globalAlpha = 1
+        }
+
+        // Core glow (enhanced)
+        const totalCoreAlpha = Math.min(0.95, 0.35 * L.core * L.coreGlow * corePulseVal * (0.4 + L.glow))
+        if (totalCoreAlpha > 0.001) {
+          const cR = R * (0.06 + L.coreSize * 5.5)
+
+          let [wr, wg, wb] = L.c1
+          if (L.colorShift) {
+            const shifted = shiftColor(wr, wg, wb);
+            wr = shifted[0]; wg = shifted[1]; wb = shifted[2]
+          }
+          const brightR = Math.round(wr + (255 - wr) * 0.7)
+          const brightG = Math.round(wg + (255 - wg) * 0.7)
+          const brightB = Math.round(wb + (255 - wb) * 0.7)
+
+          ctx.save()
           ctx.translate(cx, cy)
           ctx.rotate(rollRad)
           ctx.scale(1, 0.5 + 0.5 * cosT)
+
+          // Outer haze
+          const haze = ctx.createRadialGradient(0, 0, 0, 0, 0, cR * 2.5)
+          haze.addColorStop(0, `rgba(${brightR},${brightG},${brightB},${totalCoreAlpha * 0.3})`)
+          haze.addColorStop(0.2, `rgba(${Math.round(wr)},${Math.round(wg)},${Math.round(wb)},${totalCoreAlpha * 0.15})`)
+          haze.addColorStop(1, 'rgba(0,0,0,0)')
+          ctx.fillStyle = haze
+          ctx.fillRect(-cR * 2.5, -cR * 2.5, cR * 5, cR * 5)
+
+          // Inner bright core
           const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, cR)
-          grad.addColorStop(0, `rgba(${wr},${wg},${wb},${coreAlpha})`)
-          grad.addColorStop(0.3, `rgba(${Math.round(warmR)},${Math.round(warmG)},${Math.round(warmB)},${coreAlpha * 0.35})`)
+          grad.addColorStop(0, `rgba(255,255,255,${totalCoreAlpha * 0.8})`)
+          grad.addColorStop(0.1, `rgba(${brightR},${brightG},${brightB},${totalCoreAlpha * 0.7})`)
+          grad.addColorStop(0.35, `rgba(${Math.round(wr)},${Math.round(wg)},${Math.round(wb)},${totalCoreAlpha * 0.35})`)
           grad.addColorStop(1, 'rgba(0,0,0,0)')
           ctx.fillStyle = grad
           ctx.fillRect(-cR, -cR, cR * 2, cR * 2)
+
+          // Secondary color core ring
+          let [c2r, c2g, c2b] = L.c2
+          if (L.colorShift) {
+            const shifted = shiftColor(c2r, c2g, c2b);
+            c2r = shifted[0]; c2g = shifted[1]; c2b = shifted[2]
+          }
+          const ringAlpha = totalCoreAlpha * 0.15 * (0.7 + 0.3 * Math.sin(globalT * 1.8))
+          const ring = ctx.createRadialGradient(0, 0, cR * 0.4, 0, 0, cR * 1.2)
+          ring.addColorStop(0, 'rgba(0,0,0,0)')
+          ring.addColorStop(0.4, `rgba(${Math.round(c2r)},${Math.round(c2g)},${Math.round(c2b)},${ringAlpha})`)
+          ring.addColorStop(0.7, `rgba(${Math.round(c2r)},${Math.round(c2g)},${Math.round(c2b)},${ringAlpha * 0.3})`)
+          ring.addColorStop(1, 'rgba(0,0,0,0)')
+          ctx.fillStyle = ring
+          ctx.fillRect(-cR * 1.2, -cR * 1.2, cR * 2.4, cR * 2.4)
+
+          ctx.restore()
+
+          // Core rays (light beams emanating from center)
+          if (L.coreRays) {
+            ctx.save()
+            ctx.translate(cx, cy)
+            ctx.rotate(rollRad)
+
+            const rayCount = L.coreRayCount
+            const rayLength = cR * 3.5
+            for (let r = 0; r < rayCount; r++) {
+              const rayAngle = (r / rayCount) * TAU + globalT * 0.08
+              const rayPulse = 0.4 + 0.6 * Math.sin(globalT * 0.7 + r * 1.3)
+              const rayAlpha = totalCoreAlpha * 0.12 * rayPulse
+
+              ctx.save()
+              ctx.rotate(rayAngle)
+              ctx.scale(1, 0.5 + 0.5 * cosT)
+
+              const rayGrad = ctx.createLinearGradient(0, 0, rayLength, 0)
+              rayGrad.addColorStop(0, `rgba(${brightR},${brightG},${brightB},${rayAlpha})`)
+              rayGrad.addColorStop(0.15, `rgba(${Math.round(wr)},${Math.round(wg)},${Math.round(wb)},${rayAlpha * 0.5})`)
+              rayGrad.addColorStop(1, 'rgba(0,0,0,0)')
+              ctx.fillStyle = rayGrad
+
+              const rayWidth = cR * (0.08 + 0.06 * Math.sin(globalT * 1.2 + r * 0.7))
+              ctx.beginPath()
+              ctx.moveTo(0, -rayWidth)
+              ctx.lineTo(rayLength, -rayWidth * 0.1)
+              ctx.lineTo(rayLength, rayWidth * 0.1)
+              ctx.lineTo(0, rayWidth)
+              ctx.closePath()
+              ctx.fill()
+
+              ctx.restore()
+            }
+            ctx.restore()
+          }
+
+          // Pulsing core flare (cross pattern)
+          if (L.corePulse) {
+            ctx.save()
+            ctx.translate(cx, cy)
+            ctx.rotate(rollRad)
+            ctx.scale(1, 0.5 + 0.5 * cosT)
+
+            const flareSize = cR * (1.5 + 0.5 * Math.sin(globalT * 2.3))
+            const flareAlpha = totalCoreAlpha * 0.08 * corePulseVal
+
+            // Horizontal flare
+            const hFlare = ctx.createLinearGradient(-flareSize, 0, flareSize, 0)
+            hFlare.addColorStop(0, 'rgba(0,0,0,0)')
+            hFlare.addColorStop(0.5, `rgba(255,255,255,${flareAlpha})`)
+            hFlare.addColorStop(1, 'rgba(0,0,0,0)')
+            ctx.fillStyle = hFlare
+            ctx.fillRect(-flareSize, -cR * 0.04, flareSize * 2, cR * 0.08)
+
+            // Vertical flare
+            const vFlare = ctx.createLinearGradient(0, -flareSize, 0, flareSize)
+            vFlare.addColorStop(0, 'rgba(0,0,0,0)')
+            vFlare.addColorStop(0.5, `rgba(255,255,255,${flareAlpha * 0.6})`)
+            vFlare.addColorStop(1, 'rgba(0,0,0,0)')
+            ctx.fillStyle = vFlare
+            ctx.fillRect(-cR * 0.04, -flareSize, cR * 0.08, flareSize * 2)
+
+            // Diagonal flares
+            for (let d = 0; d < 2; d++) {
+              ctx.save()
+              ctx.rotate(Math.PI / 4 + d * Math.PI / 2)
+              const dFlare = ctx.createLinearGradient(-flareSize * 0.6, 0, flareSize * 0.6, 0)
+              dFlare.addColorStop(0, 'rgba(0,0,0,0)')
+              dFlare.addColorStop(0.5, `rgba(255,255,255,${flareAlpha * 0.3})`)
+              dFlare.addColorStop(1, 'rgba(0,0,0,0)')
+              ctx.fillStyle = dFlare
+              ctx.fillRect(-flareSize * 0.6, -cR * 0.02, flareSize * 1.2, cR * 0.04)
+              ctx.restore()
+            }
+
+            ctx.restore()
+          }
+        }
+
+        ctx.restore()
+      }
+
+      // Circular orbit guide rings (very subtle)
+      if (!ink) {
+        ctx.save()
+        ctx.globalCompositeOperation = 'lighter'
+        const orbitRings = [0.15, 0.25, 0.4, 0.55]
+        for (let i = 0; i < orbitRings.length; i++) {
+          const ringR = orbitRings[i] * R
+          const ringAlpha = 0.015 + 0.01 * Math.sin(globalT * 0.3 + i)
+
+          ctx.beginPath()
+          ctx.save()
+          ctx.translate(cx, cy)
+          ctx.rotate(rollRad)
+          ctx.scale(1, cosT)
+          ctx.arc(0, 0, ringR, 0, TAU)
+          ctx.restore()
+
+          let [cr, cg, cb] = L.c0
+          if (L.colorShift) {
+            const shifted = shiftColor(cr, cg, cb);
+            cr = shifted[0]; cg = shifted[1]; cb = shifted[2]
+          }
+
+          ctx.strokeStyle = `rgba(${Math.round(cr)},${Math.round(cg)},${Math.round(cb)},${ringAlpha})`
+          ctx.lineWidth = 0.5 * k
+          ctx.setLineDash([4 * k, 8 * k])
+          ctx.lineDashOffset = globalT * 20
+          ctx.stroke()
+          ctx.setLineDash([])
         }
         ctx.restore()
       }
@@ -716,7 +1243,11 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
           pointerEvents: 'none',
         }}
       />
-      {children ? <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>{children}</div> : null}
+      {children ? (
+        <div style={{ position: 'relative', zIndex: 1, width: '100%', height: '100%' }}>
+          {children}
+        </div>
+      ) : null}
     </div>
   )
 })
