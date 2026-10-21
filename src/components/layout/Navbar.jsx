@@ -4,6 +4,7 @@ import { FiChevronDown, FiMenu, FiX } from 'react-icons/fi'
 const links = [
   { label: 'Home', href: '#home' },
   { label: 'Services', href: '#services', dropdown: true },
+  { label: 'Pricing', href: '#pricing' },
   { label: 'Forecasts', href: '#forecasts', dropdown: true },
   { label: 'FAQ', href: '#faq' },
   { label: 'Support', href: '#support' },

@@ -8,7 +8,7 @@ const footerGroups = [
   { title: 'Pages', links: [['Home', '#home'], ['Services', '#services'], ['Forecasts', '#forecasts'], ['FAQ', '#faq'], ['About', '#about'], ['Support', '#support']] },
   { title: 'Products', links: [['Forex + Gold', '#bots'], ['Cryptocurrency', '#bots'], ['Portfolio Management', '#performance-heading'], ['Copy Trading', '#how-it-works']] },
   { title: 'Platform', links: [['MT4 Platform', '#how-it-works'], ['MT5 Platform', '#how-it-works']] },
-  { title: 'Accounts', links: [['Standard', '#bots'], ['Pro', '#bots'], ['Ultra', '#bots']] },
+  { title: 'Accounts', links: [['Standard', '#pricing'], ['Pro', '#pricing'], ['Ultra', '#pricing']] },
 ]
 
 const socials = [

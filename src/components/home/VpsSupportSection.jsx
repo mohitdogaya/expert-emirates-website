@@ -1,6 +1,9 @@
+import { lazy, Suspense } from 'react'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+
+const WebThreads = lazy(() => import('../visuals/WebThreads.jsx'))
 
 function VpsSupportSection() {
   const [sectionRef, visible] = useScrollReveal()
@@ -15,6 +18,40 @@ function VpsSupportSection() {
 
   return (
     <section className={`vps-support-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="support" aria-labelledby="vps-heading">
+      <div className="vps-support-threads" aria-hidden="true">
+        <Suspense fallback={null}>
+          <WebThreads
+            colors={['#ffd727', '#fffd9f']}
+            coreColor="#FFFFFF"
+            threadCount={6}
+            spread={0.18}
+            lightMode={false}
+            speed={0.2}
+            frequency={5}
+            taper={1}
+            position={0.5}
+            pinch={0.5}
+            nodes={1}
+            angle={15}
+            glow={0.02}
+            falloff={0.6}
+            thickness={1.1}
+            brightness={0.6}
+            opacity={1}
+            depth={0}
+            pulses={0}
+            mirror
+            shimmer={false}
+            fade={0}
+            grain={0.05}
+            intro
+            mouseInteraction
+            mouseStrength={0.5}
+            pulseOnClick
+            paused={false}
+          />
+        </Suspense>
+      </div>
       <div className="vps-copy">
         <span className="section-eyebrow">VPS &amp; technical support</span>
         <ScrollText id="vps-heading">Stay Connected to<br />Your Trading Setup</ScrollText>

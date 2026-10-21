@@ -9,6 +9,7 @@ import HowItWorksSection from '../components/home/HowItWorksSection.jsx'
 import VpsSupportSection from '../components/home/VpsSupportSection.jsx'
 import FaqSection from '../components/home/FaqSection.jsx'
 import ContactSection from '../components/home/ContactSection.jsx'
+import PricingSection from '../components/home/PricingSection.jsx'
 import FadeContent from '../components/visuals/FadeContent.jsx'
 
 const fadeContentProps = {
@@ -32,6 +33,7 @@ function Home() {
       <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
       <FadeContent {...fadeContentProps}><HowItWorksSection /></FadeContent>
       <FadeContent {...fadeContentProps}><VpsSupportSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><PricingSection /></FadeContent>
       <FadeContent {...fadeContentProps}><FaqSection /></FadeContent>
       <FadeContent {...fadeContentProps}><ContactSection /></FadeContent>
     </>
