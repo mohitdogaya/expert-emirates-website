@@ -1010,7 +1010,7 @@
   scroll-snap-align: start;
   border-radius: 20px;
   padding: 12px;
-  background: #201f27;
+  /* background: #201f27; */
 }
 .review-tilted-card {
   overflow: visible;
