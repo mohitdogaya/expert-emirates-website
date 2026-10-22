@@ -86,7 +86,7 @@ function HeroSection() {
       </div>
 
       <div className="hero-bottom">
-        <div className="strategy-list" id="bots" aria-label="Choose a trading bot">
+        <div className="strategy-list" id="bot-strategies" aria-label="Choose a trading bot">
           {strategies.map((strategy, index) => (
             <button
               className={`strategy-chip${selectedStrategy === strategy ? ' is-selected' : ''}`}

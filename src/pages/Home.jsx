@@ -1,4 +1,5 @@
 import HeroSection from '../components/home/HeroSection.jsx'
+import BotsSection from '../components/home/BotsSection.jsx'
 import FeatureSection from '../components/home/FeatureSection.jsx'
 import WhyChooseSection from '../components/home/WhyChooseSection.jsx'
 import EcosystemSection from '../components/home/EcosystemSection.jsx'
@@ -31,6 +32,7 @@ function Home() {
       <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>
       <FadeContent {...fadeContentProps}><LearningSection /></FadeContent>
       <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><BotsSection /></FadeContent>
       <FadeContent {...fadeContentProps}><HowItWorksSection /></FadeContent>
       <FadeContent {...fadeContentProps}><VpsSupportSection /></FadeContent>
       <FadeContent {...fadeContentProps}><PricingSection /></FadeContent>
