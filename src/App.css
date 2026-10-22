@@ -1717,7 +1717,7 @@
 }
 .footer-marquee {
   opacity: 0;
-  border-bottom: 1px solid #ffffff0f;
+  /* border-bottom: 1px solid #ffffff0f; */
   align-items: center;
   height: 132px;
   transition: opacity .7s,transform .7s cubic-bezier(.2,.75,.25,1);
@@ -1744,7 +1744,7 @@
 }
 .footer-brand-row {
   opacity: 0;
-  border-bottom: 1px solid #ffffff3d;
+  border-bottom: 1px solid #d8d6d61c;
   justify-content: space-between;
   align-items: center;
   min-height: 106px;
@@ -1902,7 +1902,7 @@
 }
 .footer-contact-row {
   opacity: 0;
-  border-bottom: 1px solid #ffffff3d;
+  border-bottom: 1px solid #d8d6d61c;
   justify-content: space-between;
   align-items: center;
   gap: 20px;

@@ -37,7 +37,7 @@ function FeatureCard({ title, image }) {
         glowIntensity={1}
         colors={['#c084fc', '#f472b6', '#38bdf8']}
       >
-        <div className="feature-spotlight" aria-hidden="true" />
+        <div className="" aria-hidden="true" />
         <div className="feature-graphic">
           <img src={image} alt="" aria-hidden="true" />
         </div>
