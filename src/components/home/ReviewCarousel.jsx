@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FiPlay } from 'react-icons/fi'
 import TiltedCard, { TiltedCardLayer } from '../visuals/TiltedCard.jsx'
 
@@ -31,14 +31,16 @@ function ReviewCard({ review }) {
       onFlip={setFlipped}
       className="review-tilted-card"
       backContent={
-        <iframe
-          className="review-video-frame"
-          src={`https://www.youtube-nocookie.com/embed/${review.videoId}?autoplay=1&mute=1&rel=0&playsinline=1`}
-          title={review.title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allowFullScreen
-        />
+        flipped ? (
+          <iframe
+            className="review-video-frame"
+            src={`https://www.youtube-nocookie.com/embed/${review.videoId}?autoplay=1&mute=1&rel=0&playsinline=1`}
+            title={review.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        ) : null
       }
     >
       <TiltedCardLayer depth={24} className="review-card-caption">
@@ -50,11 +52,42 @@ function ReviewCard({ review }) {
 }
 
 function ReviewCarousel() {
+  const trackRef = useRef(null)
+
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track || reviews.length < 2) return undefined
+
+    let index = 0
+    let resetTimer
+    const interval = window.setInterval(() => {
+      if (document.hidden || track.matches(':hover') || track.contains(document.activeElement) || track.querySelector('iframe')) return
+
+      index += 1
+      const item = track.querySelector('.review-carousel-item')
+      if (!item) return
+      const stride = item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')
+      track.scrollTo({ left: stride * index, behavior: 'smooth' })
+
+      if (index === reviews.length) {
+        resetTimer = window.setTimeout(() => {
+          track.scrollTo({ left: 0, behavior: 'instant' })
+          index = 0
+        }, 650)
+      }
+    }, 4000)
+
+    return () => {
+      window.clearInterval(interval)
+      window.clearTimeout(resetTimer)
+    }
+  }, [])
+
   return (
     <div className="review-carousel-container" aria-label="Client video reviews">
-      <div className="review-carousel-track" tabIndex={0}>
-        {reviews.map(review => (
-          <article className="review-carousel-item" key={review.id}>
+      <div className="review-carousel-track" ref={trackRef} tabIndex={0}>
+        {[...reviews, ...reviews].map((review, index) => (
+          <article className="review-carousel-item" key={`${review.id}-${index}`}>
             <ReviewCard review={review} />
           </article>
         ))}
