@@ -992,7 +992,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding: 10px 0 18px;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   scroll-padding-inline: 2px;
   scrollbar-color: #5b586100 transparent;
   scrollbar-width: thin;
@@ -1007,7 +1007,6 @@
   flex: 0 0 calc((100% - 54px) / 3.5);
   min-width: 0;
   height: 100%;
-  scroll-snap-align: start;
   border-radius: 20px;
   padding: 12px;
   /* background: #201f27; */

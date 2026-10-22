@@ -58,28 +58,40 @@ function ReviewCarousel() {
     const track = trackRef.current
     if (!track || reviews.length < 2) return undefined
 
-    let index = 0
-    let resetTimer
-    const interval = window.setInterval(() => {
-      if (document.hidden || track.matches(':hover') || track.contains(document.activeElement) || track.querySelector('iframe')) return
-
-      index += 1
-      const item = track.querySelector('.review-carousel-item')
-      if (!item) return
-      const stride = item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')
-      track.scrollTo({ left: stride * index, behavior: 'smooth' })
-
-      if (index === reviews.length) {
-        resetTimer = window.setTimeout(() => {
-          track.scrollTo({ left: 0, behavior: 'instant' })
-          index = 0
-        }, 650)
+    let frame = 0
+    let previousTime = 0
+    let hovered = false
+    let focused = false
+    const onPointerEnter = () => { hovered = true }
+    const onPointerLeave = () => { hovered = false }
+    const onFocusIn = () => { focused = true }
+    const onFocusOut = event => { focused = track.contains(event.relatedTarget) }
+    const animate = time => {
+      if (previousTime && !document.hidden && !hovered && !focused && !track.querySelector('iframe')) {
+        const elapsed = Math.min((time - previousTime) / 1000, 0.05)
+        const item = track.querySelector('.review-carousel-item')
+        const loopWidth = item
+          ? (item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')) * reviews.length
+          : track.scrollWidth / 2
+        track.scrollLeft += elapsed * 30
+        if (loopWidth > 0 && track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth
       }
-    }, 4000)
+      previousTime = time
+      frame = window.requestAnimationFrame(animate)
+    }
+
+    track.addEventListener('pointerenter', onPointerEnter)
+    track.addEventListener('pointerleave', onPointerLeave)
+    track.addEventListener('focusin', onFocusIn)
+    track.addEventListener('focusout', onFocusOut)
+    frame = window.requestAnimationFrame(animate)
 
     return () => {
-      window.clearInterval(interval)
-      window.clearTimeout(resetTimer)
+      window.cancelAnimationFrame(frame)
+      track.removeEventListener('pointerenter', onPointerEnter)
+      track.removeEventListener('pointerleave', onPointerLeave)
+      track.removeEventListener('focusin', onFocusIn)
+      track.removeEventListener('focusout', onFocusOut)
     }
   }, [])
 
