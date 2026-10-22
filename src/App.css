@@ -994,7 +994,7 @@
   padding: 10px 0 18px;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: 2px;
-  scrollbar-color: #5b5861 transparent;
+  scrollbar-color: #5b586100 transparent;
   scrollbar-width: thin;
   overscroll-behavior-x: contain;
   -webkit-overflow-scrolling: touch;
