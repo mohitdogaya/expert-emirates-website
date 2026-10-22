@@ -73,7 +73,7 @@ function ReviewCarousel() {
         const loopWidth = item
           ? (item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')) * reviews.length
           : track.scrollWidth / 2
-        track.scrollLeft += elapsed * 30
+        track.scrollLeft += elapsed * 95
         if (loopWidth > 0 && track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth
       }
       previousTime = time
