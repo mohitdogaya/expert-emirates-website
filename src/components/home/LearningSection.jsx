@@ -1,24 +1,15 @@
-import { FiPlay } from 'react-icons/fi'
 import { lessons } from './homeData.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
 import BorderGlow from '../visuals/BorderGlow.jsx'
+import ReviewCarousel from './ReviewCarousel.jsx'
 
 function LearningSection() {
   const [sectionRef, visible] = useScrollReveal()
   return (
     <section className={`learning-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="client-reviews" aria-labelledby="reviews-heading">
-      <div className="review-cards">
-        {[0, 1].map((item) => (
-          <BorderGlow className={`review-card review-card-${item + 1}`} key={item} backgroundColor="#201f27" borderRadius={24} glowRadius={24}>
-            <div className="review-thumbnail" role="img" aria-label="Customer review video preview">
-              <span className="play-icon"><FiPlay aria-hidden="true" /></span>
-            </div>
-            <h3>Real Trader Review</h3><p>Setup Experience</p>
-          </BorderGlow>
-        ))}
-      </div>
+      <div className="review-cards"><ReviewCarousel /></div>
       <div className="learning-copy">
         <span className="section-eyebrow">Client reviews</span>
         <ScrollText className="scroll-title" id="reviews-heading">Real <span>Experiences.</span><br />Honest <span>Feedback.</span></ScrollText>
