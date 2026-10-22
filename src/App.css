@@ -1144,6 +1144,33 @@
   min-width: 0;
   transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1);
 }
+.pricing-reflective-card.plan-standard {
+  --rc-rim: rgb(139 216 232 / 35%);
+  --rc-rim-highlight: rgb(174 239 250 / 66%);
+  --plan-accent: #8bd8e8;
+  --plan-accent-soft: rgb(139 216 232 / 12%);
+  --plan-accent-border: rgb(139 216 232 / 46%);
+  --plan-rim: rgb(139 216 232 / 35%);
+  --plan-rim-highlight: rgb(174 239 250 / 66%);
+}
+.pricing-reflective-card.plan-pro {
+  --rc-rim: rgb(232 199 67 / 42%);
+  --rc-rim-highlight: rgb(255 226 115 / 70%);
+  --plan-accent: #f3cf8a;
+  --plan-accent-soft: rgb(243 207 138 / 12%);
+  --plan-accent-border: rgb(243 207 138 / 50%);
+  --plan-rim: rgb(232 199 67 / 42%);
+  --plan-rim-highlight: rgb(255 226 115 / 70%);
+}
+.pricing-reflective-card.plan-ultra {
+  --rc-rim: rgb(196 165 255 / 35%);
+  --rc-rim-highlight: rgb(220 202 255 / 66%);
+  --plan-accent: #c4a5ff;
+  --plan-accent-soft: rgb(196 165 255 / 12%);
+  --plan-accent-border: rgb(196 165 255 / 46%);
+  --plan-rim: rgb(196 165 255 / 35%);
+  --plan-rim-highlight: rgb(220 202 255 / 66%);
+}
 .pricing-card-loading {
   height: 570px;
   border: 1px solid rgb(255 255 255 / 10%);
@@ -1154,8 +1181,8 @@
   transform: translateY(-6px);
 }
 .pricing-reflective-card.is-featured {
-  --rc-rim: rgb(232 199 67 / 42%);
-  --rc-rim-highlight: rgb(255 226 115 / 70%);
+  --rc-rim: var(--plan-rim);
+  --rc-rim-highlight: var(--plan-rim-highlight);
 }
 .pricing-card-content {
   display: flex;
@@ -1171,9 +1198,9 @@
   gap: 10px;
   min-height: 46px;
   padding: 5px 16px 5px 7px;
-  border: 1px solid rgb(255 255 255 / 7%);
+  border: 1px solid var(--plan-accent-border, rgb(255 255 255 / 7%));
   border-radius: 999px;
-  background: rgb(255 255 255 / 5%);
+  background: var(--plan-accent-soft, rgb(255 255 255 / 5%));
   font-size: 18px;
   font-weight: 600;
 }
@@ -1182,9 +1209,9 @@
   width: 34px;
   height: 34px;
   place-items: center;
-  color: #fff;
+  color: #111;
   border-radius: 50%;
-  background: #073b40;
+  background: var(--plan-accent, #073b40);
   font-size: 17px;
 }
 .pricing-price {
@@ -1225,8 +1252,8 @@
   min-width: 142px;
   min-height: 46px;
   padding: 0 24px;
-  color: #e8c743;
-  border: 1px solid rgb(184 138 4 / 75%);
+  color: var(--plan-accent, #e8c743);
+  border: 1px solid var(--plan-accent-border, rgb(184 138 4 / 75%));
   border-radius: 999px;
   font-size: 14px;
   font-weight: 700;
@@ -1239,8 +1266,8 @@
 }
 .pricing-buy-button:hover {
   color: #100f0b;
-  background: #e8c743;
-  box-shadow: 0 0 24px rgb(232 199 67 / 22%);
+  background: var(--plan-accent, #e8c743);
+  box-shadow: 0 0 24px var(--plan-accent-soft, rgb(232 199 67 / 22%));
 }
 .pricing-feature-list {
   display: grid;

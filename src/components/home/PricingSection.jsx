@@ -22,6 +22,8 @@ const plans = [
     billing: "Monthly",
     description: "Perfect for small teams or unlimited evaluation.",
     Icon: FiTag,
+    tint: "#8bd8e8",
+    variant: "standard",
   },
   {
     name: "Pro Plan",
@@ -31,6 +33,8 @@ const plans = [
       "Everything in Standard, plus enhanced features for serious traders.",
     Icon: FiAward,
     featured: true,
+    tint: "#FFD700",
+    variant: "pro",
   },
   {
     name: "Ultra Plan",
@@ -39,6 +43,8 @@ const plans = [
     description:
       "Our premium package for ultimate trading performance. Includes everything in Pro.",
     Icon: FiStar,
+    tint: "#c4a5ff",
+    variant: "ultra",
   },
 ];
 
@@ -66,7 +72,7 @@ function PricingSection() {
       </div>
 
       <div className="pricing-grid">
-        {plans.map(({ name, price, billing, description, Icon, featured }) => (
+        {plans.map(({ name, price, billing, description, Icon, featured, tint, variant }) => (
           <Suspense
             key={name}
             fallback={
@@ -74,13 +80,13 @@ function PricingSection() {
             }
           >
             <ReflectiveCard
-              className={`pricing-reflective-card${featured ? " is-featured" : ""}`}
+              className={`pricing-reflective-card plan-${variant}${featured ? " is-featured" : ""}`}
               name={name}
               role={billing}
               width="100%"
               height={570}
               radius={24}
-              tint="#f3cf8a"
+              tint={tint}
               metalness={1}
               roughness={0.3}
               blurStrength={6}
