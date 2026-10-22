@@ -3809,6 +3809,20 @@ h3 span,
   opacity: 1;
 }
 
+/* Keep every home section and its full-width card grids on one shared canvas. */
+.site-shell main section {
+  box-sizing: border-box;
+  width: min(1440px, calc(100% - 64px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 560px) {
+  .site-shell main section {
+    width: calc(100% - 32px);
+  }
+}
+
 /* Keep the hero headline crisp and let the gold line carry the accent. */
 .hero-copy h1 {
   text-shadow: 0 3px 18px rgba(0, 0, 0, 0.48);
