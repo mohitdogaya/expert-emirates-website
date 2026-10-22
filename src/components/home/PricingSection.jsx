@@ -22,7 +22,7 @@ const plans = [
     billing: "Monthly",
     description: "Perfect for small teams or unlimited evaluation.",
     Icon: FiTag,
-    tint: "#8bd8e8",
+    tint: "#201f27",
     variant: "standard",
   },
   {
@@ -43,7 +43,7 @@ const plans = [
     description:
       "Our premium package for ultimate trading performance. Includes everything in Pro.",
     Icon: FiStar,
-    tint: "#c4a5ff",
+    tint: "#201f27",
     variant: "ultra",
   },
 ];
