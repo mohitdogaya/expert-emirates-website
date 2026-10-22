@@ -1860,6 +1860,17 @@
   margin: -8px 0 35px;
   opacity: 1;
 }
+.footer-wordmark .footer-shuffle {
+  width: 100%;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: clamp(2rem, 9vw, 8rem);
+  font-weight: 800;
+  letter-spacing: .055em;
+  line-height: .86;
+  text-align: center;
+}
 .footer-cursor-icon {
   position: absolute;
   z-index: 1;

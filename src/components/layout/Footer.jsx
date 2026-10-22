@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { FiAperture, FiArrowUp, FiBarChart2, FiCircle, FiInstagram, FiMail, FiPlus, FiSend, FiStar, FiSun, FiTwitter, FiYoutube, FiZap } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
+import Shuffle from '../visuals/Shuffle.jsx'
 
 const footerGroups = [
   { title: 'Trade', links: [['Dashboard', '#home']] },
@@ -92,15 +93,28 @@ function Footer() {
               onAnimationEnd={() => removeCursorIcon(id)}
             />
           ))}
-          {[...`EXPERT EMIRATES`].map((character, index) => (
-            <span
-              className="footer-wordmark-char"
-              key={`${character}-${index}`}
-              style={{ '--char-index': index }}
-            >
-              {character === ' ' ? '\u00a0' : character}
-            </span>
-          ))}
+          <Shuffle
+            text="EXPERT EMIRATES"
+            className="footer-shuffle"
+            style={{ fontFamily: 'inherit' }}
+            effect="blur"
+            shuffleDirection="right"
+            duration={0.35}
+            animationMode="sequence"
+            shuffleTimes={1}
+            ease="power2.out"
+            stagger={0.03}
+            threshold={0.1}
+            triggerOnce
+            triggerOnHover
+            hoverRadius={0}
+            motionBlur={false}
+            respectReducedMotion
+            maxDelay={0}
+            scrambleCharset=""
+            loop={false}
+            loopDelay={0}
+          />
         </div>
 
         <div className="footer-contact-row">
