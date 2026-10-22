@@ -132,15 +132,19 @@ function BotsSection() {
     if (!frame) return undefined;
     const measure = () => {
       const compact = frame.clientWidth <= 900;
+      const accessCard = frame.querySelector(".bots-access-card");
+      const accessHeight = accessCard?.getBoundingClientRect().height ?? 0;
       setSwapSize({
         width: Math.max(260, frame.clientWidth - 48),
-        height: compact ? 460 : 300,
+        height: compact ? 520 : Math.ceil(accessHeight + 88),
         verticalDistance: compact ? 36 : 50,
       });
     };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(frame);
+    const accessCard = frame.querySelector(".bots-access-card");
+    if (accessCard) observer.observe(accessCard);
     return () => observer.disconnect();
   }, []);
 

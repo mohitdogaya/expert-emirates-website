@@ -80,7 +80,7 @@ function PricingSection() {
               width="100%"
               height={570}
               radius={24}
-              tint="#ffffff"
+              tint="#f3cf8a"
               metalness={1}
               roughness={0.3}
               blurStrength={6}
