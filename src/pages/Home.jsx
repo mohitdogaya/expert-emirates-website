@@ -27,8 +27,8 @@ function Home() {
     <>
       <FadeContent {...fadeContentProps}><HeroSection /></FadeContent>
       <FadeContent {...fadeContentProps}><FeatureSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><WhyChooseSection /></FadeContent>
       <FadeContent {...fadeContentProps}><EcosystemSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><WhyChooseSection /></FadeContent>
       <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>
       <FadeContent {...fadeContentProps}><LearningSection /></FadeContent>
       <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
