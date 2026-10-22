@@ -349,11 +349,25 @@
   display: flex
 }
 .account-stats>div:nth-child(3n+2),.account-stats>div:nth-child(3n) {
-  border-left: 1px solid #fffc
+  border-left: 1px solid #ffffff5b
 }
 .account-stats>div:nth-child(n+4) {
-  border-top: 1px solid #ffffff94;
+  border-top: 1px solid #ffffff5b;
   padding-top: 18px
+}
+.account-stats>div:nth-child(n+4):nth-child(3n+2),
+.account-stats>div:nth-child(n+4):nth-child(3n) {
+  position: relative;
+  border-left: 0;
+}
+.account-stats>div:nth-child(n+4):nth-child(3n+2)::before,
+.account-stats>div:nth-child(n+4):nth-child(3n)::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: 0;
+  left: 0;
+  border-left: 1px solid #ffffff5b;
 }
 .account-stats strong {
   white-space: nowrap;
@@ -649,9 +663,16 @@
   transform: translateY(24px);
   box-shadow: inset 0 0 25px #007bbe1f
 }
-.performance-panel.star-border {
+.performance-border.star-border {
+  display: block;
   width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   color: inherit;
+}
+.performance-border > .performance-panel {
+  width: 100%;
+  box-sizing: border-box;
 }
 .performance-light-sweep {
   position: absolute;
@@ -2345,6 +2366,10 @@
   }
   .account-stats>div:nth-child(3n+1) {
     padding-left: 0
+  }
+  .account-stats>div:nth-child(n+4):nth-child(3n+2)::before,
+  .account-stats>div:nth-child(n+4):nth-child(3n)::before {
+    top: 12px
   }
   .account-stats>div:nth-child(n+4) {
     padding-top: 12px

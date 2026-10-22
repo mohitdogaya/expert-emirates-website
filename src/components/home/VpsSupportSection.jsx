@@ -23,7 +23,7 @@ function VpsSupportSection() {
           <WebThreads
             colors={['#ffd727', '#fffd9f']}
             coreColor="#FFFFFF"
-            threadCount={6}
+            threadCount={8}
             spread={0.18}
             lightMode={false}
             speed={0.2}
@@ -33,7 +33,7 @@ function VpsSupportSection() {
             pinch={0.5}
             nodes={1}
             angle={15}
-            glow={0.02}
+            glow={0.01}
             falloff={0.6}
             thickness={1.1}
             brightness={0.6}
