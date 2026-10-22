@@ -5,6 +5,7 @@ import WhyChooseSection from '../components/home/WhyChooseSection.jsx'
 import EcosystemSection from '../components/home/EcosystemSection.jsx'
 import PerformanceSection from '../components/home/PerformanceSection.jsx'
 import LearningSection from '../components/home/LearningSection.jsx'
+import ClientReviewsSection from '../components/home/ClientReviewsSection.jsx'
 import ProductVideoSection from '../components/home/ProductVideoSection.jsx'
 import HowItWorksSection from '../components/home/HowItWorksSection.jsx'
 import VpsSupportSection from '../components/home/VpsSupportSection.jsx'
@@ -36,6 +37,7 @@ function Home() {
       <FadeContent {...fadeContentProps}><HowItWorksSection /></FadeContent>
       <FadeContent {...fadeContentProps}><VpsSupportSection /></FadeContent>
       <FadeContent {...fadeContentProps}><PricingSection /></FadeContent>
+      <FadeContent {...fadeContentProps}><ClientReviewsSection /></FadeContent>
       <FadeContent {...fadeContentProps}><FaqSection /></FadeContent>
       <FadeContent {...fadeContentProps}><ContactSection /></FadeContent>
     </>
