@@ -2,7 +2,8 @@ import { useRef, useState } from 'react'
 import { FiAperture, FiArrowUp, FiBarChart2, FiCircle, FiInstagram, FiMail, FiPlus, FiSend, FiStar, FiSun, FiTwitter, FiYoutube, FiZap } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
-import Shuffle from '../visuals/Shuffle.jsx'
+import ParticleText from '../visuals/ParticleText.jsx'
+import TextLoop from '../visuals/TextLoop.jsx'
 
 const footerGroups = [
   { title: 'Trade', links: [['Dashboard', '#home']] },
@@ -54,11 +55,32 @@ function Footer() {
 
   return (
     <footer className={`site-footer${footerVisible ? ' is-visible' : ''}`} ref={footerRef}>
-      <div className="footer-marquee" aria-label="Meet your trading edge, discover expert advisors, gold trading">
-        <div className="footer-marquee-track" aria-hidden="true">
-          <span>Meet Your Trading Edge <b>•</b> Discover Expert Advisors <b>•</b> Gold Trading <b>•</b>&nbsp;</span>
-          <span>Meet Your Trading Edge <b>•</b> Discover Expert Advisors <b>•</b> Gold Trading <b>•</b>&nbsp;</span>
-        </div>
+      <div className="footer-marquee">
+        <TextLoop
+          text="Meet Your Trading Edge • Discover Expert Advisors • Gold Trading"
+          shape="wave"
+          speed={90}
+          direction="forward"
+          separator="✦"
+          curviness={12}
+          tilt={0}
+          fontSize={36}
+          fontWeight={800}
+          letterSpacing={2}
+          uppercase
+          ribbon
+          color="#000000"
+          ribbonColor="#FFD700"
+          ribbonWidth={46}
+          edgeFade={0}
+          cross={false}
+          crossAngle={16}
+          draggable={false}
+          scrollBoost={0}
+          outline={false}
+          pauseOnHover
+          outlineWidth={1.5}
+        />
       </div>
 
       <div className="footer-inner">
@@ -93,27 +115,30 @@ function Footer() {
               onAnimationEnd={() => removeCursorIcon(id)}
             />
           ))}
-          <Shuffle
+          <ParticleText
             text="EXPERT EMIRATES"
-            className="footer-shuffle"
-            style={{ fontFamily: 'inherit' }}
-            effect="blur"
-            shuffleDirection="right"
-            duration={0.35}
-            animationMode="sequence"
-            shuffleTimes={1}
-            ease="power2.out"
-            stagger={0.03}
-            threshold={0.1}
-            triggerOnce
-            triggerOnHover
-            hoverRadius={0}
-            motionBlur={false}
-            respectReducedMotion
-            maxDelay={0}
-            scrambleCharset=""
-            loop={false}
-            loopDelay={0}
+            className="footer-particle-text"
+            style={{ width: '100%', height: '100%' }}
+            particleSize={2.2}
+            density={4}
+            color="currentColor"
+            highlightColor="#ff5a36"
+            highlightMode="motion"
+            shape="circle"
+            intro="gather"
+            scatter={190}
+            gatherDuration={1600}
+            stagger={420}
+            clickBurst
+            burstStrength={1}
+            pointerRepel={42}
+            repelRadius={120}
+            idleDrift={0.8}
+            trigger="mount"
+            fontSize="clamp(4.5rem, 20vw, 16rem)"
+            fontWeight={800}
+            fontFamily="inherit"
+            glow
           />
         </div>
 

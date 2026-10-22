@@ -1711,8 +1711,8 @@
 .site-footer {
   color: #f5f3f2;
   background: #0a090c;
-  width: min(1800px,93.8%);
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   overflow: hidden
 }
 .footer-marquee {
@@ -1729,32 +1729,8 @@
   opacity: 1;
   transform: translateY(0)
 }
-.footer-marquee-track {
-  white-space: nowrap;
-  width: max-content;
-  animation: 26s linear infinite footerMarquee;
-  display: flex
-}
-.footer-marquee:hover .footer-marquee-track {
-  animation-play-state: paused;
-}
-.footer-marquee-track span {
-  letter-spacing: .01em;
-  font-size: clamp(26px,3vw,47px);
-  font-weight: 650;
-  line-height: 1
-}
-.footer-marquee-track b {
-  margin: 0 22px;
-  font-weight: 400
-}
-@keyframes footerMarquee {
-  0% {
-    transform: translate(0)
-  }
-  to {
-    transform: translate(-50%)
-  }
+.footer-marquee > div {
+  width: 100%;
 }
 .footer-inner {
   opacity: 0;
@@ -1859,17 +1835,16 @@
   text-align: center;
   margin: -8px 0 35px;
   opacity: 1;
+  height: clamp(4.5rem, 16vw, 12rem);
+  margin-left: -4.8%;
+  margin-right: -4.8%;
 }
-.footer-wordmark .footer-shuffle {
+.footer-wordmark .footer-particle-text {
   width: 100%;
+  height: 100%;
+  min-height: 0;
   margin: 0;
   color: inherit;
-  font-family: inherit;
-  font-size: clamp(2rem, 9vw, 8rem);
-  font-weight: 800;
-  letter-spacing: .055em;
-  line-height: .86;
-  text-align: center;
 }
 .footer-cursor-icon {
   position: absolute;
@@ -1888,22 +1863,6 @@
     opacity: 0;
     transform: translate(-50%, -125%) rotate(calc(var(--icon-rotation) + 35deg)) scale(.55);
   }
-}
-.footer-wordmark-char {
-  display: inline-block;
-  opacity: 0;
-  filter: blur(7px);
-  transform: translateY(.55em) rotate(5deg);
-  transition:
-    opacity .55s ease,
-    filter .65s ease,
-    transform .65s cubic-bezier(.2,.75,.25,1);
-  transition-delay: calc(var(--char-index) * 32ms);
-}
-.site-footer.is-visible .footer-wordmark-char {
-  opacity: 1;
-  filter: blur(0);
-  transform: translateY(0) rotate(0);
 }
 .footer-link-group {
   opacity: 0;
@@ -2732,16 +2691,10 @@
 }
 @media (width<=760px) {
   .site-footer {
-    width: calc(100% - 24px)
+    width: 100%;
   }
   .footer-marquee {
     height: 78px
-  }
-  .footer-marquee-track span {
-    font-size: 24px
-  }
-  .footer-marquee-track b {
-    margin-inline: 12px
   }
   .footer-inner {
     padding: 26px 20px 20px
@@ -2772,6 +2725,9 @@
   .footer-wordmark {
     margin: 0 0 24px;
     letter-spacing: .025em;
+    height: clamp(4.5rem, 20vw, 9rem);
+    margin-left: -20px;
+    margin-right: -20px;
   }
   .footer-link-group h2 {
     font-size: 16px
@@ -2809,11 +2765,7 @@
   }
 }
 @media (prefers-reduced-motion:reduce) {
-  .footer-marquee-track {
-    animation: none
-  }
   .footer-brand-row,
-  .footer-wordmark-char,
   .footer-link-group,
   .footer-link-group a,
   .footer-contact-row,
