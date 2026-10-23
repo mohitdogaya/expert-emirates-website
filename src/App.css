@@ -1706,6 +1706,12 @@
 .faq-copy {
   align-self: start;
 }
+@media (min-width: 761px) {
+  .faq-copy {
+    position: sticky;
+    top: 120px;
+  }
+}
 .faq-copy h2,
 .contact-details > h2 {
   color: #e8c743;

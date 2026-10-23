@@ -14,9 +14,6 @@ function WhyChooseSection() {
       aria-labelledby="why-heading"
       ref={sectionRef}
     >
-      <div className="why-rays" aria-hidden="true">
-        <FallingRays />
-      </div>
       <div className="why-heading-block">
         <span className="why-eyebrow">Why choose Expert Emirates</span>
         <ScrollText id="why-heading" className="why-scroll-title"><span>Technology Designed for</span><span>Systematic Trading</span></ScrollText>

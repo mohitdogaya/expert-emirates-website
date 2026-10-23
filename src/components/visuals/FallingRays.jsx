@@ -9,7 +9,7 @@ const makeRays = (width, height) =>
       length,
       width: 0.5 + Math.random() * 1.2,
       speed: 24 + Math.random() * 46,
-      phase: Math.random() * Math.PI * 2,
+      phase: Math.random() * Math.PI * 20,
       fan: 24 + Math.random() * 72,
     }
   })
