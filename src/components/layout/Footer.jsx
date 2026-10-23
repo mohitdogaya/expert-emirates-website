@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { FiAperture, FiArrowUp, FiBarChart2, FiCircle, FiInstagram, FiMail, FiPlus, FiSend, FiStar, FiSun, FiTwitter, FiYoutube, FiZap } from 'react-icons/fi'
+import { FiAperture, FiArrowUp, FiCircle, FiInstagram, FiMail, FiPlus, FiSend, FiStar, FiSun, FiTwitter, FiYoutube, FiZap } from 'react-icons/fi'
 import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
 import ParticleText from '../visuals/ParticleText.jsx'
@@ -86,8 +86,7 @@ function Footer() {
       <div className="footer-inner">
         <div className="footer-brand-row">
           <a className="footer-brand" href="#home" aria-label="Expert Emirates home">
-            <FiBarChart2 aria-hidden="true" />
-            <span>EXPERT<br />EMIRATES</span>
+            <img src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
           </a>
           <button className="back-to-top" type="button" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
             <span className="back-to-top-label"><span>Go to Top</span><span aria-hidden="true">Go to Top</span></span>

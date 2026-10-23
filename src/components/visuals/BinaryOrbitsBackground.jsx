@@ -3,6 +3,15 @@ import BinaryOrbits from './BinaryOrbits.jsx'
 
 function BinaryOrbitsBackground({ sections = [] }) {
   const [visible, setVisible] = useState(false)
+  const [compact, setCompact] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px), (pointer: coarse)')
+    const updateCompact = () => setCompact(media.matches)
+    updateCompact()
+    media.addEventListener('change', updateCompact)
+    return () => media.removeEventListener('change', updateCompact)
+  }, [])
 
   useEffect(() => {
     const targets = sections.flatMap((selector) => {
@@ -45,8 +54,8 @@ function BinaryOrbitsBackground({ sections = [] }) {
       colors={['#fde35f', '#ffed4e']}
       backgroundColor="#0A0A0A"
       mode="auto"
-      stars={70000}
-      starSize={1.3}
+      stars={compact ? 26000 : 70000}
+      starSize={compact ? 1.15 : 1.3}
       sparkle={5}
       arms={4}
       twist={4.5}
@@ -56,11 +65,11 @@ function BinaryOrbitsBackground({ sections = [] }) {
       coreSize={0.012}
       innerVoid={0}
       thickness={0.01}
-      tilt={62}
+      tilt={compact ? 50 : 62}
       roll={-8}
-      scale={0.7}
+      scale={compact ? 1.5 : 0.7}
       centerX={0.5}
-      centerY={0.52}
+      centerY={compact ? 0.6 : 0.52}
       speed={-1.7}
       twinkle={0.82}
       depth={0.4}
@@ -69,7 +78,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       interactive={false}
       hoverWake={false}
       clickRipple={false}
-      quality={1}
+      quality={compact ? 0.72 : 1}
     />
   )
 }
