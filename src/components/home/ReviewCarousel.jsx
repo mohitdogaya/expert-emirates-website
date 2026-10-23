@@ -31,7 +31,8 @@ function ReviewCard({ review }) {
       onFlip={setFlipped}
       className="review-tilted-card"
       backContent={
-        flipped ? (
+        <>
+          {flipped && (
           <iframe
             className="review-video-frame"
             src={`https://www.youtube-nocookie.com/embed/${review.videoId}?autoplay=1&mute=1&rel=0&playsinline=1`}
@@ -40,7 +41,8 @@ function ReviewCard({ review }) {
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen
           />
-        ) : null
+          )}
+        </>
       }
     >
       <TiltedCardLayer depth={24} className="review-card-caption">
@@ -61,13 +63,21 @@ function ReviewCarousel() {
     let frame = 0
     let previousTime = 0
     let hovered = false
-    let focused = false
+    let pausedByClick = false
+    let clickToggleUsed = false
     const onPointerEnter = () => { hovered = true }
-    const onPointerLeave = () => { hovered = false }
-    const onFocusIn = () => { focused = true }
-    const onFocusOut = event => { focused = track.contains(event.relatedTarget) }
+    const onPointerLeave = () => {
+      hovered = false
+      clickToggleUsed = false
+    }
+    const onClick = () => {
+      pausedByClick = !pausedByClick
+      clickToggleUsed = true
+      hovered = false
+    }
     const animate = time => {
-      if (previousTime && !document.hidden && !hovered && !focused && !track.querySelector('iframe')) {
+      const hoverPaused = hovered && !clickToggleUsed
+      if (previousTime && !document.hidden && !hoverPaused && !pausedByClick) {
         const elapsed = Math.min((time - previousTime) / 1000, 0.05)
         const item = track.querySelector('.review-carousel-item')
         const loopWidth = item
@@ -82,16 +92,14 @@ function ReviewCarousel() {
 
     track.addEventListener('pointerenter', onPointerEnter)
     track.addEventListener('pointerleave', onPointerLeave)
-    track.addEventListener('focusin', onFocusIn)
-    track.addEventListener('focusout', onFocusOut)
+    track.addEventListener('click', onClick)
     frame = window.requestAnimationFrame(animate)
 
     return () => {
       window.cancelAnimationFrame(frame)
       track.removeEventListener('pointerenter', onPointerEnter)
       track.removeEventListener('pointerleave', onPointerLeave)
-      track.removeEventListener('focusin', onFocusIn)
-      track.removeEventListener('focusout', onFocusOut)
+      track.removeEventListener('click', onClick)
     }
   }, [])
 
