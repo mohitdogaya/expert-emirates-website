@@ -5,8 +5,19 @@ import './App.css'
 import SplashCursor from './components/visuals/SplashCursor.jsx'
 import FadeContent from './components/visuals/FadeContent.jsx'
 import BinaryOrbitsBackground from './components/visuals/BinaryOrbitsBackground.jsx'
+import LightningBackground from './components/visuals/LightningBackground.jsx'
 
 const binaryOrbitsSections = ['.hero-card', '#support']
+const galaxySections = [
+  '#about',
+  '.performance-section',
+  '#trading-education',
+  '#product-videos',
+  '#bots',
+  '#client-reviews',
+  '#faq',
+  '#contact',
+]
 
 const fadeContentProps = {
   effect: 'mist',
@@ -22,6 +33,7 @@ function App() {
     <>
       <SplashCursor />
       <BinaryOrbitsBackground sections={binaryOrbitsSections} />
+      <LightningBackground sections={galaxySections} />
       <div className="site-shell">
         <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
         <main>
