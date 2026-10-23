@@ -8,17 +8,20 @@ import BinaryOrbitsBackground from './components/visuals/BinaryOrbitsBackground.
 import LightningBackground from './components/visuals/LightningBackground.jsx'
 
 const binaryOrbitsSections = ['.hero-card', '#support']
-const galaxySections = [
+const particleRainSections = [
+  '#services',
+  '#forecasts',
   '#about',
   '.performance-section',
   '#trading-education',
   '#product-videos',
   '#bots',
+  '#how-it-works',
+  '#pricing',
   '#client-reviews',
   '#faq',
   '#contact',
 ]
-
 const fadeContentProps = {
   effect: 'mist',
   duration: 1.8,
@@ -33,13 +36,15 @@ function App() {
     <>
       <SplashCursor />
       <BinaryOrbitsBackground sections={binaryOrbitsSections} />
-      <LightningBackground sections={galaxySections} />
       <div className="site-shell">
-        <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
-        <main>
-          <Home />
-        </main>
-        <FadeContent {...fadeContentProps}><Footer /></FadeContent>
+        <LightningBackground sections={particleRainSections} excludedSections={binaryOrbitsSections} />
+        <div className="site-content">
+          <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
+          <main>
+            <Home />
+          </main>
+          <FadeContent {...fadeContentProps}><Footer /></FadeContent>
+        </div>
       </div>
     </>
   )
