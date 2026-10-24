@@ -153,7 +153,7 @@ const FadeContent = ({
   container,
   effect = 'fade',
   blur = false,
-  duration = 1,
+  duration = 0.2,
   ease = 'power2.out',
   delay = 0,
   threshold = 0.1,

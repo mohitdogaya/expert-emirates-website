@@ -14,16 +14,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
   }, [])
 
   useEffect(() => {
-    const targets = sections.flatMap((selector) => {
-      try {
-        return Array.from(document.querySelectorAll(selector))
-      } catch {
-        return []
-      }
-    })
-
-    if (!targets.length) return undefined
-
+    const targets = new Set()
     const visibleTargets = new Set()
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -32,9 +23,37 @@ function BinaryOrbitsBackground({ sections = [] }) {
       })
       setVisible(visibleTargets.size > 0)
     }, { threshold: 0.01 })
+    const syncTargets = () => {
+      const nextTargets = new Set(sections.flatMap((selector) => {
+        try {
+          return Array.from(document.querySelectorAll(selector))
+        } catch {
+          return []
+        }
+      }))
 
-    targets.forEach((target) => observer.observe(target))
-    return () => observer.disconnect()
+      targets.forEach((target) => {
+        if (nextTargets.has(target)) return
+        observer.unobserve(target)
+        visibleTargets.delete(target)
+        targets.delete(target)
+      })
+      nextTargets.forEach((target) => {
+        if (targets.has(target)) return
+        targets.add(target)
+        observer.observe(target)
+      })
+      setVisible(visibleTargets.size > 0)
+    }
+
+    // Keep targets current as lazy routes mount and unmount.
+    const mutationObserver = new MutationObserver(syncTargets)
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    syncTargets()
+    return () => {
+      mutationObserver.disconnect()
+      observer.disconnect()
+    }
   }, [sections])
 
   return (
@@ -76,6 +95,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       glow={0.2}
       intensity={1.2}
       interactive={false}
+      paused={!visible}
       hoverWake={false}
       clickRipple={false}
       quality={compact ? 0.72 : 1}

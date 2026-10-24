@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { FiCheck, FiChevronDown, FiCopy, FiInstagram, FiMenu, FiSend, FiX, FiYoutube } from 'react-icons/fi'
 import { MdQrCode2 } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 import { makeQrSvg } from './qrCode.js'
 
 const telegramUrl = 'https://t.me/expertemiratesOfficial'
@@ -12,27 +13,34 @@ const socialLinks = [
 
 const links = [
   { label: 'Home', href: '#home' },
-  { label: 'Services', href: '#services', dropdown: true },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Forecasts', href: '#forecasts', dropdown: true },
+  {
+    label: 'Services',
+    children: [
+      { label: 'Forex + Gold', href: '#bots' },
+      { label: 'Crypto', href: '#bots' },
+      { label: 'Portfolio Management', href: '#performance-heading' },
+      { label: 'Copy Trading', href: '#how-it-works' },
+    ],
+  },
+  {
+    label: 'Forecasts',
+    children: [
+      { label: 'Company News', href: '#forecasts' },
+      { label: 'Awards', href: '#forecasts' },
+    ],
+  },
   { label: 'FAQ', href: '#faq' },
   { label: 'Support', href: '#support' },
-  { label: 'About us', href: '#about' },
+  { label: 'About Us', href: '#about' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 function Navbar() {
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [openDropdown, setOpenDropdown] = useState(null)
   const [qrOpen, setQrOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const qrRef = useRef(null)
-
-  useEffect(() => {
-    const updateScrolled = () => setScrolled(window.scrollY > 36)
-    updateScrolled()
-    window.addEventListener('scroll', updateScrolled, { passive: true })
-    return () => window.removeEventListener('scroll', updateScrolled)
-  }, [])
 
   useEffect(() => {
     if (!qrOpen) return undefined
@@ -61,7 +69,7 @@ function Navbar() {
   }
 
   return (
-    <header className={`site-header${scrolled ? ' is-scrolled' : ''}`} id="home">
+    <header className="site-header" id="home">
       <a className="brand" href="#home" aria-label="Expert Emirates home">
         <img className="brand-logo" src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
         <img className="brand-favicon" src="/favicon.png" alt="" aria-hidden="true" />
@@ -76,10 +84,30 @@ function Navbar() {
         {open ? <FiX /> : <FiMenu />}
       </button>
       <nav className={`primary-nav${open ? ' is-open' : ''}`} aria-label="Main navigation">
-        {links.map(({ label, href, dropdown }) => (
-          <a href={href} key={label} onClick={() => setOpen(false)}>
-            {label}{dropdown && <FiChevronDown aria-hidden="true" />}
-          </a>
+        {links.map(({ label, href, children }) => (
+          children ? (
+            <div className={`nav-dropdown${openDropdown === label ? ' is-open' : ''}`} key={label}>
+              <button
+                className="nav-dropdown-trigger"
+                type="button"
+                aria-expanded={openDropdown === label}
+                onClick={() => setOpenDropdown((current) => current === label ? null : label)}
+              >
+                {label}<FiChevronDown aria-hidden="true" />
+              </button>
+              <div className="nav-submenu">
+                {children.map((child) => (
+                  <Link to={`/${child.href}`} key={child.label} onClick={() => { setOpen(false); setOpenDropdown(null) }}>
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <Link to={href.startsWith('/') ? href : `/${href}`} key={label} onClick={() => setOpen(false)}>
+              {label}
+            </Link>
+          )
         ))}
       </nav>
       <div className="header-qr" ref={qrRef}>

@@ -2,54 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import AnimatedLink from "./AnimatedLink.jsx";
 import CardSwap, { Card } from "../visuals/CardSwap.jsx";
 import ScrollText from "./ScrollText.jsx";
-
-const bots = [
-  {
-    name: "Rocket Bot",
-    symbol: "XAUUSD",
-    gain: "20.23%",
-    drawdown: "20.98%",
-    pips: "187,851.5",
-    capital: "$10,000",
-    image: "/UseIcons/image 34.png",
-  },
-  {
-    name: "Galaxy Bot",
-    symbol: "Forex",
-    gain: "3.51%",
-    drawdown: "10.36%",
-    pips: "187,851.5",
-    capital: "$5,000",
-    image: "/UseIcons/image 164.png",
-  },
-  {
-    name: "EURUSD Bot",
-    symbol: "EURUSD",
-    gain: "12.34%",
-    drawdown: "11.21%",
-    pips: "187,851.5",
-    capital: "$5,000",
-    image: "/UseIcons/image 164 (1).png",
-  },
-  {
-    name: "Jupiter Bot",
-    symbol: "Multi-market",
-    gain: "62.03%",
-    drawdown: "51.30%",
-    pips: "187,851.5",
-    capital: "$10,000",
-    image: "/UseIcons/image 34.png",
-  },
-  {
-    name: "XAUR Bot",
-    symbol: "Gold",
-    gain: "34.50%",
-    drawdown: "39.02%",
-    pips: "187,851.5",
-    capital: "$5,000",
-    image: "/UseIcons/image 164.png",
-  },
-];
+import { Link } from "react-router-dom";
+import { bots } from "../../data/bots.js";
 
 function BotCard({ bot }) {
   return (
@@ -111,7 +65,7 @@ function BotCard({ bot }) {
         </dl>
       </aside>
       <div className="bots-card-action">
-        <AnimatedLink href="#pricing" className="bots-view-link">
+        <AnimatedLink to={`/bots/${bot.slug}`} className="bots-view-link">
           View {bot.name}
         </AnimatedLink>
       </div>
@@ -218,7 +172,7 @@ function BotsSection() {
             {bots.map((bot) => (
               <tr key={bot.name}>
                 <th scope="row">
-                  <a href="#contact">{bot.name}</a>
+                  <Link to={`/bots/${bot.slug}`}>{bot.name}</Link>
                 </th>
                 <td className="bots-table-gain">{bot.gain}</td>
                 <td>{bot.drawdown}</td>

@@ -40,22 +40,15 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
         return []
       }
     })
-    const allowedTargets = getTargets(sections)
-    const excludedTargets = getTargets(excludedSections)
-    const targets = [...new Set([...allowedTargets, ...excludedTargets])]
-
-    if (!allowedTargets.length) {
-      setActive(false)
-      return undefined
-    }
-
+    const allowedTargets = new Set()
+    const excludedTargets = new Set()
+    const targets = new Set()
     const visibleTargets = new Set()
     const updateActive = () => {
-      const sectionVisible = allowedTargets.some((target) => visibleTargets.has(target))
-      const excludedVisible = excludedTargets.some((target) => visibleTargets.has(target))
+      const sectionVisible = [...allowedTargets].some((target) => visibleTargets.has(target))
+      const excludedVisible = [...excludedTargets].some((target) => visibleTargets.has(target))
       setActive(sectionVisible && !excludedVisible)
     }
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) visibleTargets.add(entry.target)
@@ -63,21 +56,37 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
       })
       updateActive()
     }, { threshold: 0.01 })
-    targets.forEach((target) => observer.observe(target))
+    const syncTargets = () => {
+      const nextAllowed = new Set(getTargets(sections))
+      const nextExcluded = new Set(getTargets(excludedSections))
+      const nextTargets = new Set([...nextAllowed, ...nextExcluded])
 
-    let scrollTimer
-    const onScroll = () => {
-      if (!background.classList.contains('is-active')) return
-      background.classList.add('is-scrolling')
-      window.clearTimeout(scrollTimer)
-      scrollTimer = window.setTimeout(() => background.classList.remove('is-scrolling'), 160)
+      targets.forEach((target) => {
+        if (nextTargets.has(target)) return
+        observer.unobserve(target)
+        visibleTargets.delete(target)
+        targets.delete(target)
+      })
+      nextTargets.forEach((target) => {
+        if (targets.has(target)) return
+        targets.add(target)
+        observer.observe(target)
+      })
+
+      allowedTargets.clear()
+      nextAllowed.forEach((target) => allowedTargets.add(target))
+      excludedTargets.clear()
+      nextExcluded.forEach((target) => excludedTargets.add(target))
+      updateActive()
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
+    // Keep targets current as lazy routes mount and unmount.
+    const mutationObserver = new MutationObserver(syncTargets)
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
+    syncTargets()
     return () => {
+      mutationObserver.disconnect()
       observer.disconnect()
-      window.removeEventListener('scroll', onScroll)
-      window.clearTimeout(scrollTimer)
     }
   }, [sections, excludedSections])
 
@@ -127,6 +136,7 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
         mouseStrength={1}
         clickStrike
         intro
+        paused={!active}
         fade={0}
         opacity={0.04}
         lightMode={false}

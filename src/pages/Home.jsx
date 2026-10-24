@@ -16,7 +16,7 @@ import FadeContent from '../components/visuals/FadeContent.jsx'
 
 const fadeContentProps = {
   effect: 'mist',
-  duration: 1.8,
+  duration: 1.1,
   ease: 'power2.out',
   stagger: 0.1,
   threshold: 0.1,
@@ -27,7 +27,7 @@ function Home() {
   return (
     <>
       <FadeContent {...fadeContentProps}><HeroSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><FeatureSection /></FadeContent>
+      <FeatureSection />
       <FadeContent {...fadeContentProps}><EcosystemSection /></FadeContent>
       <FadeContent {...fadeContentProps}><WhyChooseSection /></FadeContent>
       <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>

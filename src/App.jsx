@@ -1,11 +1,11 @@
 import Navbar from './components/layout/Navbar.jsx'
-import Home from './pages/Home.jsx'
 import Footer from './components/layout/Footer.jsx'
 import './App.css'
 import SplashCursor from './components/visuals/SplashCursor.jsx'
 import FadeContent from './components/visuals/FadeContent.jsx'
 import BinaryOrbitsBackground from './components/visuals/BinaryOrbitsBackground.jsx'
 import LightningBackground from './components/visuals/LightningBackground.jsx'
+import AppRoutes from './routes/AppRoutes.jsx'
 
 const binaryOrbitsSections = ['.hero-card', '#support']
 const particleRainSections = [
@@ -41,7 +41,7 @@ function App() {
         <div className="site-content">
           <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
           <main>
-            <Home />
+            <AppRoutes />
           </main>
           <FadeContent {...fadeContentProps}><Footer /></FadeContent>
         </div>

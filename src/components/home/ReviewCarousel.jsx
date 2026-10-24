@@ -65,6 +65,7 @@ function ReviewCarousel() {
     let hovered = false
     let pausedByClick = false
     let clickToggleUsed = false
+    let visible = false
     const onPointerEnter = () => { hovered = true }
     const onPointerLeave = () => {
       hovered = false
@@ -87,16 +88,26 @@ function ReviewCarousel() {
         if (loopWidth > 0 && track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth
       }
       previousTime = time
-      frame = window.requestAnimationFrame(animate)
+      frame = visible ? window.requestAnimationFrame(animate) : 0
     }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      previousTime = 0
+      if (visible && !frame) frame = window.requestAnimationFrame(animate)
+      if (!visible && frame) {
+        window.cancelAnimationFrame(frame)
+        frame = 0
+      }
+    })
+    observer.observe(track)
 
     track.addEventListener('pointerenter', onPointerEnter)
     track.addEventListener('pointerleave', onPointerLeave)
     track.addEventListener('click', onClick)
-    frame = window.requestAnimationFrame(animate)
-
     return () => {
-      window.cancelAnimationFrame(frame)
+      observer.disconnect()
+      if (frame) window.cancelAnimationFrame(frame)
       track.removeEventListener('pointerenter', onPointerEnter)
       track.removeEventListener('pointerleave', onPointerLeave)
       track.removeEventListener('click', onClick)
