@@ -82,7 +82,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       colors={['#fde35f', '#ffed4e']}
       backgroundColor="#0A0A0A"
       mode="auto"
-      stars={compact ? 12000 : 32000}
+      stars={compact ? 26000 : 50000}
       starSize={compact ? 1.15 : 1.3}
       sparkle={4}
       arms={4}
@@ -107,7 +107,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       paused={!visible}
       hoverWake={false}
       clickRipple={false}
-      quality={compact ? 0.55 : 0.72}
+      quality={compact ? 0.7 : 0.92}
     />
   )
 }

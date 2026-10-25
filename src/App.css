@@ -6,6 +6,13 @@
   position: relative;
   z-index: 1;
 }
+.background-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: #050505;
+  pointer-events: none;
+}
 .site-content {
   width: min(100%, 1440px);
   margin-inline: auto;
