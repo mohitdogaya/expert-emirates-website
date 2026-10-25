@@ -9,6 +9,7 @@ import AppRoutes from './routes/AppRoutes.jsx'
 
 const binaryOrbitsSections = ['.hero-card']
 const particleRainSections = [
+  '.site-content > main',
   '#services',
   '#forecasts',
   '#about',
