@@ -4,6 +4,7 @@ import { faqs } from './homeData.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import '../../stylesheets/FaqSection.css'
 
 function FaqSection() {
   const [sectionRef, visible] = useScrollReveal()

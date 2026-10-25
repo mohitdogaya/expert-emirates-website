@@ -3,6 +3,7 @@ import { FiArrowUpRight, FiChevronDown, FiZap } from 'react-icons/fi'
 import { metrics, strategies } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
 import Magnet from '../visuals/Magnet.jsx'
+import '../../stylesheets/HeroSection.css'
 
 function CountUp({ value, format, active }) {
   const [count, setCount] = useState(0)
@@ -40,10 +41,7 @@ function HeroSection() {
   }, [heroVisible, titleVisible])
 
   useEffect(() => {
-    if (!titleVisible) {
-      setDetailsVisible(false)
-      return undefined
-    }
+    if (!titleVisible) return undefined
 
     // Bring in metrics, controls, and account details after the copy appears.
     const timer = window.setTimeout(() => setDetailsVisible(true), 1300)

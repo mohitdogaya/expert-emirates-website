@@ -1,0 +1,150 @@
+
+.learning-copy h2 {
+  letter-spacing: -0.035em;
+  margin: 24px 0 22px;
+  font-size: clamp(35px, 3.4vw, 48px);
+  line-height: 1.08;
+}
+.education-copy h2 {
+  letter-spacing: -0.035em;
+  margin: 24px 0 22px;
+  font-size: clamp(35px, 3.4vw, 48px);
+  line-height: 1.08;
+}
+.learning-copy h2 span {
+  color: #e8c743;
+}
+.education-copy h2 span {
+  color: #e8c743;
+}
+.learning-copy h2 {
+  font-size: clamp(31px, 3vw, 43px);
+}
+.education-copy h2 {
+  font-size: clamp(31px, 3vw, 43px);
+}
+.learning-section {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: center;
+  gap: 100px 55px;
+  padding: 0 0 110px;
+  display: grid;
+}
+.learning-section {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  padding: 0 0 110px;
+}
+.learning-copy {
+  align-self: center;
+}
+.education-copy {
+  align-self: center;
+}
+.lesson-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  display: grid;
+}
+.lesson-card {
+  text-align: center;
+  opacity: 0;
+  min-height: 130px;
+  transition:
+    opacity 0.6s,
+    transform 0.6s cubic-bezier(0.2, 0.75, 0.25, 1),
+    background 0.3s;
+  transition-delay: var(--item-delay);
+  background: #201f27;
+  border-radius: 18px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 10px;
+  display: flex;
+  transform: translateY(20px);
+}
+.learning-section.is-visible .lesson-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+.lesson-card:hover {
+  background: #292831;
+  transform: translateY(-4px);
+}
+.learning-section.is-visible .lesson-card:hover {
+  transform: translateY(-4px);
+}
+.lesson-card svg {
+  display: none;
+}
+.lesson-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.lesson-card p {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+@media (width<=1100px) {
+  .learning-section {
+    gap: 70px 30px;
+  }
+}
+@media (width<=760px) {
+  .learning-copy h2 {
+    font-size: 35px;
+  }
+  .education-copy h2 {
+    font-size: 35px;
+  }
+  .learning-copy h2 {
+    font-size: 31px;
+  }
+  .education-copy h2 {
+    font-size: 31px;
+  }
+  .learning-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-bottom: 70px;
+  }
+  .lesson-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .lesson-card {
+    min-height: 105px;
+    padding: 12px 7px;
+  }
+  .lesson-card h3 {
+    font-size: 14px;
+  }
+  .lesson-card p {
+    font-size: 9px;
+  }
+}
+.learning-copy .scroll-copy {
+  font-size: 14px;
+}
+.learning-copy .scroll-copy {
+  letter-spacing: 0.07em;
+  max-width: 580px;
+  margin: 0 0 28px;
+  font-size: 16px;
+  line-height: 1.58;
+}
+@media (width<=760px) {
+  .learning-copy .scroll-copy {
+    font-size: 14px;
+  }
+  .education-copy .scroll-copy {
+    font-size: 14px;
+  }
+  .learning-copy .scroll-copy {
+    font-size: 13px;
+  }
+  .education-copy .scroll-copy {
+    font-size: 13px;
+  }
+}

@@ -5,7 +5,7 @@ import AnimatedLink from '../home/AnimatedLink.jsx'
 import { bots } from '../../data/bots.js'
 import { getBotTradingPeriods } from '../../data/performanceHistory.js'
 import PerformanceChart from './PerformanceChart.jsx'
-import './DetailsDashboard.css'
+import '../../stylesheets/DetailsDashboard.css'
 
 const tableViews = ['Periods', 'Calendar', 'Goals', 'Browser', 'Forecast']
 const activityViews = ['Open Trades', 'Open Orders', 'History', 'Exposure']

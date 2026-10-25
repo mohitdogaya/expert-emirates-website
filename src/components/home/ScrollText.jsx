@@ -1,4 +1,5 @@
 import { Children, cloneElement, isValidElement, useEffect, useRef, useState } from 'react'
+import '../../stylesheets/ScrollText.css'
 
 function revealWords(nodes, sequence, wordClassName) {
   return Children.map(nodes, (node) => {

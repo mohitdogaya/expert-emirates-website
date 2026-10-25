@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import AnimatedLink from "./AnimatedLink.jsx";
 import useScrollReveal from "./useScrollReveal.js";
 import ScrollText from "./ScrollText.jsx";
+import '../../stylesheets/VpsSupportSection.css'
 
 const WebThreads = lazy(() => import("../visuals/WebThreads.jsx"));
 

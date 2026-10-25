@@ -2,6 +2,7 @@ import useScrollReveal from './useScrollReveal.js'
 import AnimatedLink from './AnimatedLink.jsx'
 import ScrollText from './ScrollText.jsx'
 import StarBorder from '../visuals/StarBorder.jsx'
+import '../../stylesheets/PerformanceSection.css'
 
 function PerformanceSection() {
   const [sectionRef, visible] = useScrollReveal()

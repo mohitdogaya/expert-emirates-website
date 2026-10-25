@@ -3,6 +3,7 @@ import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
 import BorderGlow from '../visuals/BorderGlow.jsx'
+import '../../stylesheets/LearningSection.css'
 
 function LearningSection() {
   const [sectionRef, visible] = useScrollReveal()

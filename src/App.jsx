@@ -1,7 +1,8 @@
 import { Component, lazy, Suspense } from 'react'
+import './stylesheets/App.css'
+import './stylesheets/SectionShared.css'
 import Navbar from './components/layout/Navbar.jsx'
 import Footer from './components/layout/Footer.jsx'
-import './App.css'
 import FadeContent from './components/visuals/FadeContent.jsx'
 import AppRoutes from './routes/AppRoutes.jsx'
 

@@ -2,6 +2,7 @@ import { steps } from "./homeData.js";
 import useScrollReveal from "./useScrollReveal.js";
 import ScrollText from "./ScrollText.jsx";
 import BorderGlow from "../visuals/BorderGlow.jsx";
+import '../../stylesheets/HowItWorksSection.css'
 
 function HowItWorksSection() {
   const [sectionRef, visible] = useScrollReveal();

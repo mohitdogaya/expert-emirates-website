@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { FiArrowUpRight } from 'react-icons/fi'
 import { features } from './homeData.js'
 import BorderGlow from '../visuals/BorderGlow.jsx'
-import './FeatureSection.css'
+import '../../stylesheets/FeatureSection.css'
 
 function FeatureCard({ title, image }) {
   const handlePointerMove = (event) => {

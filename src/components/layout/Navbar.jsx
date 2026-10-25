@@ -3,6 +3,7 @@ import { FiCheck, FiChevronDown, FiCopy, FiInstagram, FiMenu, FiSend, FiX, FiYou
 import { MdQrCode2 } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { makeQrSvg } from './qrCode.js'
+import '../../stylesheets/Navbar.css'
 
 const telegramUrl = 'https://t.me/expertemiratesOfficial'
 const socialLinks = [

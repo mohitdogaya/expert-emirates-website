@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 
-import './StarBorder.css';
+import '../../stylesheets/StarBorder.css';
 
 const THEMES = {
   dark: {

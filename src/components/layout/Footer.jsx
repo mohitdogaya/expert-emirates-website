@@ -4,6 +4,7 @@ import useScrollReveal from '../home/useScrollReveal.js'
 import ScrollText from '../home/ScrollText.jsx'
 import ParticleText from '../visuals/ParticleText.jsx'
 import TextLoop from '../visuals/TextLoop.jsx'
+import '../../stylesheets/Footer.css'
 
 const footerGroups = [
   { title: 'Trade', links: [['Dashboard', '#home']] },

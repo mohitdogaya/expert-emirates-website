@@ -2,6 +2,7 @@ import AnimatedLink from './AnimatedLink.jsx'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
 import ReviewCarousel from './ReviewCarousel.jsx'
+import '../../stylesheets/ClientReviewsSection.css'
 
 function ClientReviewsSection() {
   const [sectionRef, visible] = useScrollReveal()

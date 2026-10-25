@@ -1,0 +1,104 @@
+
+.scroll-text-title {
+  opacity: 1 !important;
+  clip-path: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-title-word {
+    opacity: 1;
+    clip-path: none;
+    filter: none;
+    transition: none;
+    transform: none;
+  }
+  .scroll-text-title.is-visible .scroll-title-word {
+    opacity: 1;
+    clip-path: none;
+    filter: none;
+    transition: none;
+    transform: none;
+  }
+}
+
+.scroll-title-word {
+  color: #eed25d !important;
+  -webkit-text-fill-color: #eed25d;
+}
+.scroll-text-title .scroll-title-word {
+  background-image: linear-gradient(to bottom, #713f12, #fde047, #713f12);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.scroll-title-word {
+  display: inline-block;
+  opacity: 0;
+  clip-path: none;
+  filter: none;
+  transform: translateY(0.7em);
+  transition:
+    opacity 0.75s ease,
+    transform 1.05s cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition-delay: calc(var(--word-index, 0) * 60ms + var(--card-delay, 0s));
+  will-change: opacity, transform;
+}
+
+.scroll-text-title.is-visible .scroll-title-word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scroll-description-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.4em);
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition-delay: calc(var(--word-index, 0) * 22ms);
+  will-change: opacity, transform;
+}
+
+.scroll-text-title.is-visible .scroll-description-word {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#why-heading .scroll-title-word {
+  transition-duration: 1.4s;
+  transition-delay: calc(var(--word-index, 0) * 90ms + var(--card-delay, 0s));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-title-word {
+    transition: none;
+    will-change: auto;
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+  .scroll-text-title.is-visible .scroll-title-word {
+    transition: none;
+    will-change: auto;
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+  .scroll-description-word {
+    transition: none;
+    will-change: auto;
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+  .scroll-text-title.is-visible .scroll-description-word {
+    transition: none;
+    will-change: auto;
+    transform: none;
+    filter: none;
+    opacity: 1;
+  }
+}

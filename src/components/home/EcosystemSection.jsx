@@ -1,5 +1,6 @@
 import useScrollReveal from "./useScrollReveal.js";
 import ScrollText from "./ScrollText.jsx";
+import '../../stylesheets/EcosystemSection.css'
 
 function EcosystemSection() {
   const [sectionRef, visible] = useScrollReveal();

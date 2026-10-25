@@ -5,6 +5,7 @@ import ScrollText from "./ScrollText.jsx";
 import { Link } from "react-router-dom";
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { bots } from "../../data/bots.js";
+import '../../stylesheets/BotsSection.css'
 
 function CopyValue({ value }) {
   const [copied, setCopied] = useState(false);
@@ -104,12 +105,33 @@ function BotCard({ bot }) {
 }
 
 function BotsSection() {
+  const headingRef = useRef(null);
   const swapFrameRef = useRef(null);
+  const [cardsVisible, setCardsVisible] = useState(false);
   const [swapSize, setSwapSize] = useState({
     width: 900,
     height: 300,
     verticalDistance: 50,
   });
+
+  useEffect(() => {
+    const heading = headingRef.current;
+    if (!heading) return undefined;
+
+    let revealTimer;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+
+      observer.disconnect();
+      revealTimer = window.setTimeout(() => setCardsVisible(true), 1350);
+    }, { threshold: 0.1 });
+
+    observer.observe(heading);
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(revealTimer);
+    };
+  }, []);
 
   useEffect(() => {
     const frame = swapFrameRef.current;
@@ -134,8 +156,8 @@ function BotsSection() {
   }, []);
 
   return (
-    <section className="bots-section" id="bots" aria-labelledby="bots-heading">
-      <div className="bots-section-heading">
+    <section className={`bots-section${cardsVisible ? " cards-visible" : ""}`} id="bots" aria-labelledby="bots-heading">
+      <div className="bots-section-heading" ref={headingRef}>
         <div>
           <span className="section-eyebrow">Automated strategies</span>
           <ScrollText className="scroll-title" id="bots">

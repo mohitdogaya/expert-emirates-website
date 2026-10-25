@@ -1,0 +1,204 @@
+
+.vps-support-section {
+  position: relative;
+  background: #201f27;
+  border-radius: 48px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(250px, 0.9fr) minmax(
+      0,
+      0.75fr
+    );
+  align-items: center;
+  gap: 90px;
+  width: min(1328px, 100% - 64px);
+  min-height: 450px;
+  margin: 0 auto 56px;
+  padding: 25px 35px;
+  display: grid;
+  overflow: hidden;
+}
+.vps-support-threads {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.78;
+}
+.vps-support-threads > div {
+  pointer-events: none;
+}
+.vps-support-threads canvas {
+  pointer-events: none;
+}
+.vps-copy {
+  position: relative;
+  z-index: 1;
+}
+.vps-illustration {
+  position: relative;
+  z-index: 1;
+}
+.vps-support-list {
+  position: relative;
+  z-index: 1;
+}
+.vps-copy h2 {
+  color: #e9e7e8;
+  letter-spacing: -0.035em;
+  margin: 0 0 24px;
+  font-size: clamp(29px, 2.9vw, 40px);
+  line-height: 1.22;
+}
+.vps-copy > p {
+  letter-spacing: 0.08em;
+  opacity: 0;
+  max-width: 480px;
+  margin: 0 0 36px;
+  font-size: 16px;
+  line-height: 1.55;
+  transition:
+    opacity 0.7s 0.12s,
+    transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1) 0.12s;
+  transform: translateY(18px);
+}
+.vps-support-section.is-visible .vps-copy > p {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+.vps-illustration {
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 0;
+  width: 90%;
+  transition:
+    opacity 0.9s 0.12s,
+    transform 0.9s cubic-bezier(0.2, 0.75, 0.25, 1) 0.12s;
+  display: block;
+  transform: translateY(22px) scale(0.94);
+}
+.vps-support-section.is-visible .vps-illustration {
+  opacity: 1;
+  animation: 5.5s ease-in-out 1.1s infinite robotFloat;
+  transform: translateY(0) scale(1);
+}
+.vps-support-list {
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+.vps-support-list li {
+  opacity: 0;
+  transition:
+    opacity 0.65s,
+    transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1);
+  transition-delay: var(--item-delay);
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(14px, 1.3vw, 19px);
+  line-height: 1.35;
+  display: flex;
+  transform: translate(22px);
+}
+.vps-support-section.is-visible .vps-support-list li {
+  opacity: 1;
+  transform: translate(0);
+}
+.vps-support-list img {
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px #edb51b40);
+  flex: none;
+  width: 28px;
+  height: 28px;
+  transition: transform 0.4s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.vps-support-list li:hover img {
+  transform: rotate(-10deg) scale(1.12);
+}
+@media (width<=1100px) {
+  .vps-support-section {
+    border-radius: 36px;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 0.8fr) minmax(0, 1fr);
+    gap: 14px;
+    width: calc(100% - 48px);
+    min-height: 380px;
+    padding: 24px;
+  }
+  .vps-copy h2 {
+    font-size: clamp(26px, 3.2vw, 34px);
+  }
+  .vps-copy > p {
+    margin-bottom: 24px;
+    font-size: 14px;
+  }
+  .vps-support-list {
+    gap: 12px;
+  }
+  .vps-support-list li {
+    gap: 8px;
+    font-size: 14px;
+  }
+  .vps-support-list img {
+    width: 26px;
+    height: 26px;
+  }
+}
+@media (width<=760px) {
+  .vps-support-section {
+    border-radius: 28px;
+    grid-template-columns: 1fr;
+    gap: 9px;
+    width: calc(100% - 24px);
+    min-height: auto;
+    margin-bottom: 36px;
+    padding: 20px 16px;
+  }
+  .vps-copy h2 {
+    margin-bottom: 12px;
+    font-size: 29px;
+  }
+  .vps-copy > p {
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .vps-illustration {
+    justify-self: center;
+    width: min(64%, 240px);
+    margin: -5px auto;
+  }
+  .vps-support-list {
+    gap: 10px;
+    padding-top: 3px;
+  }
+  .vps-support-list li {
+    gap: 7px;
+    font-size: 13px;
+  }
+  .vps-support-list img {
+    width: 23px;
+    height: 23px;
+  }
+}
+.vps-copy .section-eyebrow {
+  margin-bottom: 30px;
+}
+.vps-support-section.is-visible .vps-copy .animated-link {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+@media (width<=760px) {
+  .vps-copy .section-eyebrow {
+    margin-bottom: 20px;
+  }
+}
+@keyframes robotFloat {
+  0%, to {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-10px) scale(1);
+  }
+}

@@ -1,6 +1,7 @@
 import { FiMapPin } from 'react-icons/fi'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
+import '../../stylesheets/ContactSection.css'
 
 function ContactSection() {
   const [sectionRef, visible] = useScrollReveal()

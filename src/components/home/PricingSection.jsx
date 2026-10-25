@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { FiAward, FiCheck, FiStar, FiTag } from "react-icons/fi";
 import ScrollText from "./ScrollText.jsx";
+import '../../stylesheets/PricingSection.css'
 
 const ReflectiveCard = lazy(() => import("../visuals/ReflectiveCard.jsx"));
 

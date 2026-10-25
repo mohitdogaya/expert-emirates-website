@@ -1,0 +1,181 @@
+
+.button {
+  white-space: nowrap;
+  border-radius: 999px;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 0 22px;
+  font-size: 16px;
+  text-decoration: none;
+  transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1);
+  display: inline-flex;
+}
+.button svg {
+  font-size: 16px;
+}
+.button-light {
+  color: #101010;
+  background: #fff9e8;
+  box-shadow: 0 0 24px #ffe79b26;
+}
+.button-outline {
+  color: #fff7df;
+  background: #0003;
+  border: 1px solid #fff1ce;
+}
+.button:hover {
+  transform: translateY(-2px);
+}
+.button-label {
+  text-align: center;
+  flex-direction: column;
+  height: 1.35em;
+  line-height: 1.35;
+  display: flex;
+  overflow: hidden;
+}
+.button-label > span {
+  transition: transform 0.45s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.button:hover .button-label > span {
+  transform: translateY(-100%);
+}
+.button > svg {
+  transition: transform 0.35s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+.button:hover > svg {
+  transform: translate(3px, -3px);
+}
+.scroll-section {
+  width: min(1628px, 100% - 64px);
+  margin: 0 auto;
+}
+.section-eyebrow {
+  color: #f5f2e9;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: #100f0b;
+  border: 1px solid #d8c900;
+  border-radius: 999px;
+  justify-content: center;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 18px;
+  font-size: 11px;
+  display: inline-flex;
+}
+.scroll-copy {
+  opacity: 0;
+  transition:
+    opacity 0.7s 0.12s,
+    transform 0.7s cubic-bezier(0.2, 0.75, 0.25, 1) 0.12s;
+  transform: translateY(20px);
+}
+.scroll-section.is-visible .scroll-copy {
+  opacity: 1;
+  clip-path: inset(0);
+  transform: translateY(0);
+}
+.scroll-section .animated-link {
+  opacity: 0;
+  transition:
+    opacity 0.65s 0.22s,
+    transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1) 0.22s,
+    box-shadow 0.35s;
+  transform: translateY(16px);
+}
+.scroll-section.is-visible .animated-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+.scroll-section.is-visible .animated-link:hover {
+  transform: translateY(-3px);
+}
+@media (width>=1500px) {
+  .scroll-section {
+    width: min(1628px, 84.6%);
+  }
+}
+@media (width<=1100px) {
+  .scroll-section {
+    width: calc(100% - 48px);
+  }
+}
+@media (width<=760px) {
+  .button {
+    gap: 5px;
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 12px;
+  }
+  .button svg {
+    font-size: 13px;
+  }
+  .scroll-section {
+    width: calc(100% - 24px);
+  }
+}
+
+.button-light {
+  color: #111;
+  border: 1px solid #fff;
+  background-color: #fff;
+  background-image: none;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+}
+
+.button-outline {
+  color: #111;
+  border: 1px solid #fff;
+  background-color: #fff;
+  background-image: none;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.12);
+}
+.button-light:hover {
+  color: #111;
+  border-color: #fff;
+  background-color: #fff;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.24);
+}
+.button-outline:hover {
+  color: #111;
+  border-color: #fff;
+  background-color: #fff;
+  box-shadow: 0 0 24px rgba(255, 255, 255, 0.24);
+}
+.gradient-heading {
+  background-image: linear-gradient(to bottom, #713f12, #fde047, #713f12);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.gradient-heading * {
+  background-image: linear-gradient(to bottom, #713f12, #fde047, #713f12);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.section-eyebrow {
+  color: #fff;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-color: #100f0b;
+  background-image:
+    linear-gradient(#100f0b, #100f0b), url("/UseIcons/button-shade.png");
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  background-size:
+    auto,
+    100% 100%;
+  background-repeat: no-repeat;
+}
+.section-eyebrow:hover {
+  color: #fff;
+  background-color: #000;
+  background-image:
+    linear-gradient(#000, #000), url("/UseIcons/button-shade.png");
+}
