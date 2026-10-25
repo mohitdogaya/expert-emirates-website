@@ -1,0 +1,13 @@
+.contact-route {
+  padding-top: clamp(24px, 4vw, 56px);
+}
+
+.contact-route .contact-section {
+  padding-bottom: clamp(40px, 6vw, 80px);
+}
+
+@media (max-width: 760px) {
+  .contact-route {
+    padding-top: 20px;
+  }
+}

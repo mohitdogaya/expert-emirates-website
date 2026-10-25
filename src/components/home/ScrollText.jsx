@@ -28,21 +28,17 @@ function ScrollText({ as: Tag = 'h2', className = '', wordClassName = 'scroll-ti
     const title = titleRef.current
     if (!title) return undefined
 
-    let observer
-    const observeTitle = () => {
-      observer?.disconnect()
-      const inset = Math.round(window.innerHeight * 0.1)
-      observer = new IntersectionObserver(([entry]) => {
-        setVisible(entry.isIntersecting)
-      }, { threshold: 0, rootMargin: `-${inset}px 0px -${inset}px 0px` })
-      observer.observe(title)
-    }
+    const inset = Math.round(window.innerHeight * 0.1)
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return
 
-    observeTitle()
-    window.addEventListener('resize', observeTitle)
+      setVisible(true)
+      observer.disconnect()
+    }, { threshold: 0, rootMargin: `-${inset}px 0px -${inset}px 0px` })
+    observer.observe(title)
+
     return () => {
-      observer?.disconnect()
-      window.removeEventListener('resize', observeTitle)
+      observer.disconnect()
     }
   }, [])
 

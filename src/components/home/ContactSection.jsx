@@ -3,11 +3,11 @@ import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
 import '../../stylesheets/ContactSection.css'
 
-function ContactSection() {
+function ContactSection({ onSubmit }) {
   const [sectionRef, visible] = useScrollReveal()
   return (
     <section className={`contact-section scroll-section${visible ? ' is-visible' : ''}`} ref={sectionRef} id="contact" aria-labelledby="contact-heading">
-      <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
+      <form className="contact-form" onSubmit={onSubmit ?? ((event) => event.preventDefault())}>
         <ScrollText>Contact Us</ScrollText>
         <div className="contact-fields">
           <label><span className="visually-hidden">First name</span><input type="text" name="firstName" placeholder="First Name" autoComplete="given-name" required /></label>
