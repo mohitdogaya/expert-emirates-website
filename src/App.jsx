@@ -1,11 +1,13 @@
+import { lazy, Suspense } from 'react'
 import Navbar from './components/layout/Navbar.jsx'
 import Footer from './components/layout/Footer.jsx'
 import './App.css'
-import SplashCursor from './components/visuals/SplashCursor.jsx'
 import FadeContent from './components/visuals/FadeContent.jsx'
-import BinaryOrbitsBackground from './components/visuals/BinaryOrbitsBackground.jsx'
-import LightningBackground from './components/visuals/LightningBackground.jsx'
 import AppRoutes from './routes/AppRoutes.jsx'
+
+const SplashCursor = lazy(() => import('./components/visuals/SplashCursor.jsx'))
+const BinaryOrbitsBackground = lazy(() => import('./components/visuals/BinaryOrbitsBackground.jsx'))
+const LightningBackground = lazy(() => import('./components/visuals/LightningBackground.jsx'))
 
 const binaryOrbitsSections = ['.hero-card']
 const particleRainSections = [
@@ -37,20 +39,24 @@ const fadeContentProps = {
 function App() {
   return (
     <>
-      <SplashCursor
-        quality="low"
-        intensity={0.7}
-        force={0.7}
-        swirl={2}
-        trail={0.75}
-        momentum={0.8}
-        shading={0}
-        glow={0}
-        intro={false}
-      />
-      <BinaryOrbitsBackground sections={binaryOrbitsSections} />
+      <Suspense fallback={null}>
+        <SplashCursor
+          quality="low"
+          intensity={0.7}
+          force={0.7}
+          swirl={2}
+          trail={0.75}
+          momentum={0.8}
+          shading={0}
+          glow={0}
+          intro={false}
+        />
+        <BinaryOrbitsBackground sections={binaryOrbitsSections} />
+      </Suspense>
       <div className="site-shell">
-        <LightningBackground sections={particleRainSections} excludedSections={binaryOrbitsSections} />
+        <Suspense fallback={null}>
+          <LightningBackground sections={particleRainSections} excludedSections={binaryOrbitsSections} />
+        </Suspense>
         <div className="site-content">
           <FadeContent {...fadeContentProps}><Navbar /></FadeContent>
           <main>

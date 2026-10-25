@@ -3,6 +3,7 @@ import BinaryOrbits from './BinaryOrbits.jsx'
 
 function BinaryOrbitsBackground({ sections = [] }) {
   const [visible, setVisible] = useState(false)
+  const [started, setStarted] = useState(false)
   const [compact, setCompact] = useState(false)
 
   useEffect(() => {
@@ -21,7 +22,9 @@ function BinaryOrbitsBackground({ sections = [] }) {
         if (entry.isIntersecting) visibleTargets.add(entry.target)
         else visibleTargets.delete(entry.target)
       })
-      setVisible(visibleTargets.size > 0)
+      const isVisible = visibleTargets.size > 0
+      setVisible(isVisible)
+      if (isVisible) setStarted(true)
     }, { threshold: 0.01 })
     const syncTargets = () => {
       const nextTargets = new Set(sections.flatMap((selector) => {
@@ -56,26 +59,32 @@ function BinaryOrbitsBackground({ sections = [] }) {
     }
   }, [sections])
 
+  const backgroundStyle = {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 0,
+    width: '100vw',
+    height: '100vh',
+    minHeight: 0,
+    pointerEvents: 'none',
+    opacity: visible ? 1 : 0,
+    transition: 'opacity 400ms ease',
+  }
+
+  if (!started) {
+    return <div className="binary-orbits-background" style={backgroundStyle} aria-hidden="true" />
+  }
+
   return (
     <BinaryOrbits
       className="binary-orbits-background"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 0,
-        width: '100vw',
-        height: '100vh',
-        minHeight: 0,
-        pointerEvents: 'none',
-        opacity: visible ? 1 : 0,
-        transition: 'opacity 400ms ease',
-      }}
+      style={backgroundStyle}
       colors={['#fde35f', '#ffed4e']}
       backgroundColor="#0A0A0A"
       mode="auto"
-      stars={compact ? 26000 : 70000}
+      stars={compact ? 12000 : 32000}
       starSize={compact ? 1.15 : 1.3}
-      sparkle={5}
+      sparkle={4}
       arms={4}
       twist={4.5}
       armStrength={0.9}
@@ -98,7 +107,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       paused={!visible}
       hoverWake={false}
       clickRipple={false}
-      quality={compact ? 0.72 : 1}
+      quality={compact ? 0.55 : 0.72}
     />
   )
 }

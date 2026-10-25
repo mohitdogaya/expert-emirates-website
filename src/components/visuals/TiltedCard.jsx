@@ -538,6 +538,8 @@ const TiltedCard = ({
               className="pointer-events-none absolute block max-w-none object-cover"
               src={imageSrc}
               alt={altText}
+              loading="lazy"
+              decoding="async"
               draggable={false}
               style={{
                 '--tc-depth': -24,

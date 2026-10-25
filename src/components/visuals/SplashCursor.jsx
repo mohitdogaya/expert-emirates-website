@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 const QUALITY = {
-  low: { sim: 64, dye: 512, iterations: 10 },
+  low: { sim: 48, dye: 256, iterations: 6 },
   medium: { sim: 96, dye: 1024, iterations: 16 },
   high: { sim: 128, dye: 1440, iterations: 20 }
 };
@@ -508,7 +508,9 @@ function SplashCursor({
     };
 
     const fit = () => {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const quality = settingsRef.current.quality;
+      const maxRatio = quality === 'low' ? 1 : quality === 'medium' ? 1.5 : 2;
+      const ratio = Math.min(window.devicePixelRatio || 1, maxRatio);
       const width = Math.max(1, Math.floor(canvas.clientWidth * ratio));
       const height = Math.max(1, Math.floor(canvas.clientHeight * ratio));
       if (canvas.width === width && canvas.height === height) return;

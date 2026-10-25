@@ -66,6 +66,13 @@ function ReviewCarousel() {
     let pausedByClick = false
     let clickToggleUsed = false
     let visible = false
+    let loopWidth = 0
+    const updateLoopWidth = () => {
+      const item = track.querySelector('.review-carousel-item')
+      loopWidth = item
+        ? (item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')) * reviews.length
+        : track.scrollWidth / 2
+    }
     const onPointerEnter = () => { hovered = true }
     const onPointerLeave = () => {
       hovered = false
@@ -80,16 +87,18 @@ function ReviewCarousel() {
       const hoverPaused = hovered && !clickToggleUsed
       if (previousTime && !document.hidden && !hoverPaused && !pausedByClick) {
         const elapsed = Math.min((time - previousTime) / 1000, 0.05)
-        const item = track.querySelector('.review-carousel-item')
-        const loopWidth = item
-          ? (item.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || '0')) * reviews.length
-          : track.scrollWidth / 2
         track.scrollLeft += elapsed * 95
         if (loopWidth > 0 && track.scrollLeft >= loopWidth) track.scrollLeft -= loopWidth
       }
       previousTime = time
       frame = visible ? window.requestAnimationFrame(animate) : 0
     }
+
+    updateLoopWidth()
+    const resizeObserver = new ResizeObserver(updateLoopWidth)
+    resizeObserver.observe(track)
+    const firstItem = track.querySelector('.review-carousel-item')
+    if (firstItem) resizeObserver.observe(firstItem)
 
     const observer = new IntersectionObserver(([entry]) => {
       visible = entry.isIntersecting
@@ -107,6 +116,7 @@ function ReviewCarousel() {
     track.addEventListener('click', onClick)
     return () => {
       observer.disconnect()
+      resizeObserver.disconnect()
       if (frame) window.cancelAnimationFrame(frame)
       track.removeEventListener('pointerenter', onPointerEnter)
       track.removeEventListener('pointerleave', onPointerLeave)

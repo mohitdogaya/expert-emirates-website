@@ -175,8 +175,8 @@ const BorderGlow = ({
       className={`relative grid isolate border ${className}`}
       style={{
         background: glassColor,
-        backdropFilter: 'blur(16px) saturate(140%)',
-        WebkitBackdropFilter: 'blur(16px) saturate(140%)',
+        backdropFilter: 'blur(8px) saturate(120%)',
+        WebkitBackdropFilter: 'blur(8px) saturate(120%)',
         borderColor: lightSurface ? 'rgb(24 24 27 / 12%)' : 'rgb(255 255 255 / 15%)',
         borderRadius: `${borderRadius}px`,
         
