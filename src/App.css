@@ -42,6 +42,10 @@
   transform-box: fill-box;
   transform-origin: center;
   animation: gold-particle-rain var(--fall-duration, 5s) linear var(--fall-delay, 0s) infinite;
+  animation-play-state: paused;
+}
+.lightning-background.is-active .landing-particle-fall {
+  animation-play-state: running;
 }
 @keyframes gold-particle-rain {
   0% { opacity: 0.08; transform: translateY(-150px) scale(0.65); }

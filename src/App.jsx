@@ -7,7 +7,7 @@ import BinaryOrbitsBackground from './components/visuals/BinaryOrbitsBackground.
 import LightningBackground from './components/visuals/LightningBackground.jsx'
 import AppRoutes from './routes/AppRoutes.jsx'
 
-const binaryOrbitsSections = ['.hero-card', '#support']
+const binaryOrbitsSections = ['.hero-card']
 const particleRainSections = [
   '#services',
   '#forecasts',
@@ -18,9 +18,11 @@ const particleRainSections = [
   '#bots',
   '#how-it-works',
   '#pricing',
+  '#support',
   '#client-reviews',
   '#faq',
   '#contact',
+  '.details-page',
 ]
 const fadeContentProps = {
   effect: 'mist',
@@ -43,7 +45,7 @@ function App() {
           <main>
             <AppRoutes />
           </main>
-          <FadeContent {...fadeContentProps}><Footer /></FadeContent>
+          <Footer />
         </div>
       </div>
     </>

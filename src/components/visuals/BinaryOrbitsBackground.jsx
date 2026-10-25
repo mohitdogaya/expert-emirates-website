@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import BinaryOrbits from './BinaryOrbits.jsx'
 
 function BinaryOrbitsBackground({ sections = [] }) {
-  const [visible, setVisible] = useState(false)
+  // Show the canvas during the initial background-first frame, before page
+  // sections have mounted and the intersection observer can find its targets.
+  const [visible, setVisible] = useState(true)
   const [compact, setCompact] = useState(false)
 
   useEffect(() => {
@@ -43,7 +45,6 @@ function BinaryOrbitsBackground({ sections = [] }) {
         targets.add(target)
         observer.observe(target)
       })
-      setVisible(visibleTargets.size > 0)
     }
 
     // Keep targets current as lazy routes mount and unmount.
@@ -74,6 +75,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       backgroundColor="#0A0A0A"
       mode="auto"
       stars={compact ? 26000 : 70000}
+      stars={compact ? 8000 : 70000}
       starSize={compact ? 1.15 : 1.3}
       sparkle={5}
       arms={4}
@@ -98,7 +100,7 @@ function BinaryOrbitsBackground({ sections = [] }) {
       paused={!visible}
       hoverWake={false}
       clickRipple={false}
-      quality={compact ? 0.72 : 1}
+      quality={compact ? 0.45 : 1}
     />
   )
 }

@@ -72,7 +72,6 @@ function Navbar() {
     <header className="site-header" id="home">
       <a className="brand" href="#home" aria-label="Expert Emirates home">
         <img className="brand-logo" src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
-        <img className="brand-favicon" src="/favicon.png" alt="" aria-hidden="true" />
       </a>
       <button
         className="menu-toggle"

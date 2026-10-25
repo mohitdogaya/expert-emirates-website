@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import HeroSection from '../components/home/HeroSection.jsx'
 import BotsSection from '../components/home/BotsSection.jsx'
 import FeatureSection from '../components/home/FeatureSection.jsx'
@@ -24,22 +25,33 @@ const fadeContentProps = {
 }
 
 function Home() {
+  const [sectionsReady, setSectionsReady] = useState(false)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setSectionsReady(true), 450)
+    return () => window.clearTimeout(timer)
+  }, [])
+
   return (
     <>
       <FadeContent {...fadeContentProps}><HeroSection /></FadeContent>
-      <FeatureSection />
-      <FadeContent {...fadeContentProps}><EcosystemSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><WhyChooseSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><LearningSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><BotsSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><HowItWorksSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><VpsSupportSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><PricingSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><ClientReviewsSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><FaqSection /></FadeContent>
-      <FadeContent {...fadeContentProps}><ContactSection /></FadeContent>
+      {sectionsReady && (
+        <>
+          <FeatureSection />
+          <FadeContent {...fadeContentProps}><EcosystemSection /></FadeContent>
+          <WhyChooseSection />
+          <FadeContent {...fadeContentProps}><PerformanceSection /></FadeContent>
+          <LearningSection />
+          <FadeContent {...fadeContentProps}><ProductVideoSection /></FadeContent>
+          <BotsSection />
+          <HowItWorksSection />
+          <VpsSupportSection />
+          <FadeContent {...fadeContentProps}><PricingSection /></FadeContent>
+          <ClientReviewsSection />
+          <FaqSection />
+          <FadeContent {...fadeContentProps}><ContactSection /></FadeContent>
+        </>
+      )}
     </>
   )
 }

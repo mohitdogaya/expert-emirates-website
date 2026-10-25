@@ -313,6 +313,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
   const rootRef = useRef(null)
   const canvasRef = useRef(null)
   const glowCanvasRef = useRef(null)
+  const wakeFrameRef = useRef(null)
   const ringsRef = useRef([])
   const shockwavesRef = useRef([])
 
@@ -366,6 +367,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
   }
   const liveRef = useRef(live)
   useEffect(() => { liveRef.current = live })
+  useEffect(() => { wakeFrameRef.current?.() }, [paused])
 
   useImperativeHandle(ref, () => ({
     ripple: (strength = 1) => {
@@ -399,12 +401,13 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
 
     const mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null
     let reduced = !!(mq && mq.matches)
-    const onMotion = (e) => { reduced = e.matches; dirty = true }
+    const onMotion = (e) => { reduced = e.matches; dirty = true; scheduleFrame?.() }
     if (mq && mq.addEventListener) mq.addEventListener('change', onMotion)
 
     let bw = 2, bh = 2, k = 1
     let img = null, data = null, u32 = null
     let raf = 0, last = 0, dirty = true, lastQuality = -1
+    let scheduleFrame = null
     let lastLive = null, curStars = null
     let dr = null, dth = null, wk = null
 
@@ -441,6 +444,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       bloom.height = Math.max(2, bh >> 2)
       lastQuality = q
       dirty = true
+      scheduleFrame?.()
     }
 
     const toPlane = (bx, by) => {
@@ -457,8 +461,8 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       if (!pointer.active) { pointer.lx = pointer.x * k; pointer.ly = pointer.y * k }
       pointer.active = true
     }
-    const onMove = (e) => setPointer(e)
-    const onLeave = () => { pointer.active = false }
+    const onMove = (e) => { setPointer(e); scheduleFrame?.() }
+    const onLeave = () => { pointer.active = false; scheduleFrame?.() }
     const onDown = (e) => {
       const L = liveRef.current
       if (!L.interactive || reduced) return
@@ -469,6 +473,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       if (L.shockwaveOnClick)
         shockwavesRef.current.push({ t: 0, s: 1 })
       dirty = true
+      scheduleFrame?.()
     }
 
     root.addEventListener('pointermove', onMove)
@@ -481,7 +486,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
     resize()
 
     const frame = (now) => {
-      raf = window.requestAnimationFrame(frame)
+      raf = 0
       const L = liveRef.current
       const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016)
       last = now
@@ -1202,11 +1207,18 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         }
         ctx.restore()
       }
+
+      if (!frozen || busy) scheduleFrame?.()
     }
 
-    raf = window.requestAnimationFrame(frame)
+    scheduleFrame = () => {
+      if (!raf) raf = window.requestAnimationFrame(frame)
+    }
+    wakeFrameRef.current = scheduleFrame
+    scheduleFrame()
 
     return () => {
+      wakeFrameRef.current = null
       window.cancelAnimationFrame(raf)
       root.removeEventListener('pointermove', onMove)
       root.removeEventListener('pointerleave', onLeave)
