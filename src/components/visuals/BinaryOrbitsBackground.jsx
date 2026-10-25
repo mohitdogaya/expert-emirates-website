@@ -74,7 +74,6 @@ function BinaryOrbitsBackground({ sections = [] }) {
       colors={['#fde35f', '#ffed4e']}
       backgroundColor="#0A0A0A"
       mode="auto"
-      stars={compact ? 26000 : 70000}
       stars={compact ? 8000 : 70000}
       starSize={compact ? 1.15 : 1.3}
       sparkle={5}
