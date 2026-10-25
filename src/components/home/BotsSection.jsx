@@ -3,7 +3,37 @@ import AnimatedLink from "./AnimatedLink.jsx";
 import CardSwap, { Card } from "../visuals/CardSwap.jsx";
 import ScrollText from "./ScrollText.jsx";
 import { Link } from "react-router-dom";
+import { FiCheck, FiCopy } from "react-icons/fi";
 import { bots } from "../../data/bots.js";
+
+function CopyValue({ value }) {
+  const [copied, setCopied] = useState(false);
+
+  const copyValue = async () => {
+    try {
+      await navigator.clipboard.writeText(String(value));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      window.prompt("Copy this value", String(value));
+    }
+  };
+
+  return (
+    <dd className="bots-access-value">
+      <span>{value}</span>
+      <button
+        className="bots-copy-button"
+        type="button"
+        onClick={copyValue}
+        aria-label={copied ? `${value} copied` : `Copy ${value}`}
+        title={copied ? "Copied" : "Copy value"}
+      >
+        {copied ? <FiCheck aria-hidden="true" /> : <FiCopy aria-hidden="true" />}
+      </button>
+    </dd>
+  );
+}
 
 function BotCard({ bot }) {
   return (
@@ -40,27 +70,27 @@ function BotCard({ bot }) {
         <dl>
           <div>
             <dt>Broker</dt>
-            <dd>Signature Prime Capital Ltd</dd>
+            <CopyValue value="Signature Prime Capital Ltd" />
           </div>
           <div>
             <dt>Account</dt>
-            <dd>Investor</dd>
+            <CopyValue value="Investor" />
           </div>
           <div>
             <dt>Server</dt>
-            <dd>SignaturePrime-Server</dd>
+            <CopyValue value="SignaturePrime-Server" />
           </div>
           <div>
             <dt>Platform</dt>
-            <dd>MetaTrader 5</dd>
+            <CopyValue value="MetaTrader 5" />
           </div>
           <div>
             <dt>Starting Capital</dt>
-            <dd>{bot.capital}</dd>
+            <CopyValue value={bot.capital} />
           </div>
           <div>
             <dt>Access details</dt>
-            <dd>Shared privately</dd>
+            <CopyValue value="Shared privately" />
           </div>
         </dl>
       </aside>

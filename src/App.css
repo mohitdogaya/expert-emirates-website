@@ -3543,6 +3543,38 @@
   color: #f3f1f4;
   text-align: right;
 }
+.bots-access-card .bots-access-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-width: 0;
+}
+.bots-access-value > span {
+  overflow-wrap: anywhere;
+}
+.bots-copy-button {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  place-items: center;
+  padding: 0;
+  border: 1px solid #45434b;
+  border-radius: 7px;
+  background: #25242b;
+  color: #e8c84c;
+  cursor: pointer;
+}
+.bots-copy-button svg {
+  width: 13px;
+  height: 13px;
+}
+.bots-copy-button:hover,
+.bots-copy-button:focus-visible {
+  border-color: #e8c84c;
+  color: #fff0a8;
+}
 .bots-stack-hint {
   position: absolute;
   right: 16px;
