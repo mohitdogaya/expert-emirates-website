@@ -3007,10 +3007,8 @@
   .review-card p {
     font-size: 11px;
   }
-  .education-copy {
-    grid-row: 3;
-  }
   .lesson-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
   .lesson-card {
@@ -3734,6 +3732,39 @@
     line-height: 1.5;
   }
 }
+
+@media (max-width: 600px) {
+  .site-shell main section.bots-section {
+    width: calc(100% - 20px);
+  }
+  .bots-card-swap-frame {
+    height: 600px;
+  }
+  .bots-feature-card {
+    grid-template-rows: 225px minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 15px;
+  }
+  .bots-card-heading h3 {
+    max-width: 74%;
+    font-size: clamp(22px, 7vw, 27px);
+    white-space: nowrap;
+  }
+  .bots-product-art {
+    width: 24%;
+  }
+  .bots-card-action {
+    position: static;
+    grid-column: 1;
+    justify-self: center;
+    align-self: end;
+    margin-top: 2px;
+    transform: none;
+  }
+  .bots-stack-hint {
+    display: none;
+  }
+}
 .brand:hover img {
   filter: drop-shadow(0 0 10px #e7c62e4d);
   transform: translateY(-2px) scale(1.025);
@@ -4385,6 +4416,15 @@ main h2 {
 }
 
 @media (max-width: 760px) {
+  .header-qr .qr-popover {
+    position: fixed;
+    top: 88px;
+    right: auto;
+    left: 50vw;
+    width: min(340px, calc(100vw - 24px));
+    margin-left: max(-170px, calc(-50vw + 12px));
+  }
+
   .nav-dropdown {
     width: 100%;
   }

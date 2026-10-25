@@ -90,9 +90,9 @@ function BotsSection() {
       const accessCard = frame.querySelector(".bots-access-card");
       const accessHeight = accessCard?.getBoundingClientRect().height ?? 0;
       setSwapSize({
-        width: Math.max(260, frame.clientWidth - 24),
-        height: narrow ? 470 : compact ? 520 : Math.ceil(accessHeight + 88),
-        verticalDistance: narrow ? 30 : compact ? 36 : 50,
+        width: Math.max(260, frame.clientWidth - (narrow ? 8 : 24)),
+        height: narrow ? 540 : compact ? 520 : Math.ceil(accessHeight + 88),
+        verticalDistance: narrow ? 18 : compact ? 36 : 50,
       });
     };
     measure();
@@ -131,7 +131,7 @@ function BotsSection() {
           verticalDistance={swapSize.verticalDistance}
           depth={100}
           skewAmount={0}
-          visibleCards={4}
+          visibleCards={swapSize.width <= 600 ? 2 : 4}
           delay={4000}
           cardRadius={18}
           speed={1}

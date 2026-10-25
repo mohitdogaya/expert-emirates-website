@@ -41,6 +41,23 @@ function Navbar() {
   const [qrOpen, setQrOpen] = useState(false)
   const [copied, setCopied] = useState(false)
   const qrRef = useRef(null)
+  const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    if (!openDropdown) return undefined
+    const closeOnOutsideClick = (event) => {
+      if (!dropdownRef.current?.contains(event.target)) setOpenDropdown(null)
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setOpenDropdown(null)
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [openDropdown])
 
   useEffect(() => {
     if (!qrOpen) return undefined
@@ -85,7 +102,11 @@ function Navbar() {
       <nav className={`primary-nav${open ? ' is-open' : ''}`} aria-label="Main navigation">
         {links.map(({ label, href, children }) => (
           children ? (
-            <div className={`nav-dropdown${openDropdown === label ? ' is-open' : ''}`} key={label}>
+            <div
+              className={`nav-dropdown${openDropdown === label ? ' is-open' : ''}`}
+              key={label}
+              ref={openDropdown === label ? dropdownRef : null}
+            >
               <button
                 className="nav-dropdown-trigger"
                 type="button"

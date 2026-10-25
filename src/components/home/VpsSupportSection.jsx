@@ -1,12 +1,33 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import AnimatedLink from "./AnimatedLink.jsx";
 import useScrollReveal from "./useScrollReveal.js";
 import ScrollText from "./ScrollText.jsx";
 
 const WebThreads = lazy(() => import("../visuals/WebThreads.jsx"));
 
+const getThreadProfile = () => {
+  if (window.innerWidth <= 600) return "mobile";
+  if (window.innerWidth <= 900) return "tablet";
+  return "desktop";
+};
+
+const threadProfiles = {
+  mobile: { threadCount: 4, speed: 0.14, spread: 0.12, glow: 0.03, thickness: 0.9, brightness: 0.65, dpr: 0.8 },
+  tablet: { threadCount: 6, speed: 0.2, spread: 0.15, glow: 0.065, thickness: 1, brightness: 0.75, dpr: 1 },
+  desktop: { threadCount: 8, speed: 0.2, spread: 0.18, glow: 0.01, thickness: 1.1, brightness: 0.6, dpr: 2 },
+};
+
 function VpsSupportSection() {
   const [sectionRef, visible] = useScrollReveal();
+  const [threadProfile, setThreadProfile] = useState(getThreadProfile);
+  const threadSettings = threadProfiles[threadProfile];
+
+  useEffect(() => {
+    const updateProfile = () => setThreadProfile(getThreadProfile());
+    window.addEventListener("resize", updateProfile, { passive: true });
+    return () => window.removeEventListener("resize", updateProfile);
+  }, []);
+
   const supportItems = [
     "VPS Setup Guidance",
     "MT5 Installation Assistance",
@@ -28,20 +49,23 @@ function VpsSupportSection() {
           <WebThreads
             colors={["#ffd727", "#fffd9f"]}
             coreColor="#FFFFFF"
-            threadCount={8}
-            spread={0.18}
+            className="vps-support-webthreads"
+            style={{ width: "100%", height: "100%" }}
+            threadCount={threadSettings.threadCount}
+            spread={threadSettings.spread}
             lightMode={false}
-            speed={0.2}
+            speed={threadSettings.speed}
             frequency={5}
             taper={1}
             position={0.5}
             pinch={0.5}
             nodes={1}
             angle={15}
-            glow={0.01}
+            glow={threadSettings.glow}
             falloff={0.6}
-            thickness={1.1}
-            brightness={0.6}
+            thickness={threadSettings.thickness}
+            brightness={threadSettings.brightness}
+            dpr={threadSettings.dpr}
             opacity={1}
             depth={0}
             pulses={0}
