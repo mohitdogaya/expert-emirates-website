@@ -37,7 +37,17 @@ const fadeContentProps = {
 function App() {
   return (
     <>
-      <SplashCursor />
+      <SplashCursor
+        quality="low"
+        intensity={0.7}
+        force={0.7}
+        swirl={2}
+        trail={0.75}
+        momentum={0.8}
+        shading={0}
+        glow={0}
+        intro={false}
+      />
       <BinaryOrbitsBackground sections={binaryOrbitsSections} />
       <div className="site-shell">
         <LightningBackground sections={particleRainSections} excludedSections={binaryOrbitsSections} />

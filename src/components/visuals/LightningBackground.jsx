@@ -8,7 +8,7 @@ const randomAt = (a, b) => {
 
 function createParticles() {
   const particles = []
-  for (let index = 0; index < 360; index += 1) {
+  for (let index = 0; index < 120; index += 1) {
     particles.push({
       key: index,
       x: 36 + randomAt(index, 1) * 1528,
@@ -128,17 +128,17 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
         angle={-10}
         size={1}
         thickness={1}
-        glow={0.7}
-        intensity={0.6}
-        speed={0.8}
-        flicker={0.6}
+        glow={0.35}
+        intensity={0.4}
+        speed={0.6}
+        flicker={0.4}
         mouseInteraction
         mouseStrength={1}
         clickStrike
         intro
         paused={!active}
         fade={0}
-        opacity={0.04}
+        opacity={0.025}
         lightMode={false}
         style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'transparent' }}
       />
