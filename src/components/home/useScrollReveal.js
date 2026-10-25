@@ -8,7 +8,10 @@ export default function useScrollReveal() {
     const node = ref.current
     if (!node) return undefined
     const observer = new IntersectionObserver(([entry]) => {
-      setVisible(entry.isIntersecting)
+      if (!entry.isIntersecting) return
+
+      setVisible(true)
+      observer.disconnect()
     }, { threshold: 0.12 })
     observer.observe(node)
     return () => observer.disconnect()
