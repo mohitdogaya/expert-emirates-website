@@ -1,7 +1,6 @@
 import { reasons } from './homeData.js'
 import useScrollReveal from './useScrollReveal.js'
 import ScrollText from './ScrollText.jsx'
-import FallingRays from '../visuals/FallingRays.jsx'
 import BorderGlow from '../visuals/BorderGlow.jsx'
 
 function WhyChooseSection() {

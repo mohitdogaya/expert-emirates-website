@@ -5,7 +5,6 @@ const DEFAULT_COLORS = ['#7B4DFF', '#FFC2EE', '#00D4FF', '#FFD700']
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
 const lerp = (a, b, t) => a + (b - a) * t
-const smoothstep = (t) => t * t * (3 - 2 * t)
 
 function parseColor(input, fallback = [255, 255, 255]) {
   if (typeof input !== 'string') return fallback
@@ -312,7 +311,6 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
 
   const rootRef = useRef(null)
   const canvasRef = useRef(null)
-  const glowCanvasRef = useRef(null)
   const wakeFrameRef = useRef(null)
   const ringsRef = useRef([])
   const shockwavesRef = useRef([])
@@ -377,7 +375,6 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
       shockwavesRef.current.push({ t: 0, s: strength })
     },
     burst: () => {
-      const L = liveRef.current
       for (let i = 0; i < 50; i++) {
         ringsRef.current.push({
           x: (Math.random() - 0.5) * 0.3,
@@ -417,10 +414,6 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
 
     const pointer = { x: 0, y: 0, lx: 0, ly: 0, active: false }
     const geom = { cx: 0, cy: 0, R: 1, cosR: 1, sinR: 0, cosT: 1 }
-
-    // Trail buffer for orbital streams
-    const trailBuf = new Float32Array(2000 * 2)
-    let trailIdx = 0
 
     const resize = () => {
       const rect = root.getBoundingClientRect()

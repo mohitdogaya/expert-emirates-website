@@ -38,8 +38,7 @@
   pointer-events: none;
 }
 
-button.star-border,
-a.star-border {
+button.star-border, a.star-border {
   cursor: pointer;
 }
 

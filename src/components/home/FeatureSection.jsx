@@ -13,15 +13,6 @@ function FeatureCard({ title, image }) {
     const y = event.clientY - b.top
     card.style.setProperty('--mouse-x', `${x}px`)
     card.style.setProperty('--mouse-y', `${y}px`)
-    card.style.setProperty('--tilt-x', `${((y / b.height) - 0.5) * -4}deg`)
-    card.style.setProperty('--tilt-y', `${((x / b.width) - 0.5) * 4}deg`)
-  }
-
-  const resetPointer = (event) => {
-    const card = event.currentTarget
-    if (!card) return
-    card.style.setProperty('--tilt-x', '0deg')
-    card.style.setProperty('--tilt-y', '0deg')
   }
 
   return (
@@ -29,7 +20,6 @@ function FeatureCard({ title, image }) {
       <BorderGlow
         className="feature-card"
         onPointerMove={handlePointerMove}
-        onPointerLeave={resetPointer}
         backgroundColor="#1e1c25"
         borderRadius={20}
         glowColor="40 80 80"

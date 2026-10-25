@@ -195,9 +195,9 @@ const TextLoop = ({
 
     const measure = () => {
       if (cancelled) return;
-      let length = 0;
-      let unitWidth = 0;
-      let crossLength = 0;
+      let length;
+      let unitWidth;
+      let crossLength;
       try {
         length = pathEl.getTotalLength();
         unitWidth = measureEl.getComputedTextLength();
