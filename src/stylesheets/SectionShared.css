@@ -79,6 +79,7 @@
   transform: translateY(0);
 }
 .scroll-section .animated-link {
+  margin-top: 18px;
   opacity: 0;
   transition:
     opacity 0.65s 0.22s,
