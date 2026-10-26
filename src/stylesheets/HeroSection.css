@@ -519,57 +519,54 @@
   transform: translateY(-100%);
 }
 
-.hero-card .strategy-chip:hover {
+.hero-stage .strategy-chip:is(:hover, :focus-visible) {
   color: #fff;
-  background: #050505;
-  border-color: transparent;
-  box-shadow: 0 0 18px #d6a40030;
+  background: #050505 !important;
+  border-color: transparent !important;
+  box-shadow: none;
 }
 
-.hero-card .strategy-chip::after {
+.hero-stage .strategy-chip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background:
+    linear-gradient(#050505, #050505) left center / 0% 100% no-repeat,
+    linear-gradient(#050505, #050505) right center / 0% 100% no-repeat;
+  transition: background-size 0.32s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.hero-stage .strategy-chip::after {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 1px;
+  border-top: 1px solid #f0d27b;
+  border-bottom: 1px solid #b48927;
   pointer-events: none;
   opacity: 0;
-  background: conic-gradient(
-    #b48927 0deg,
-    #f0d27b 18deg,
-    #b48927 36deg,
-    #231a09 72deg,
-    #100d08 90deg,
-    #231a09 108deg,
-    #b48927 144deg,
-    #f0d27b 180deg,
-    #b48927 216deg,
-    #231a09 252deg,
-    #100d08 270deg,
-    #231a09 288deg,
-    #b48927 324deg,
-    #f0d27b 350deg,
-    #b48927 360deg
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  filter: drop-shadow(0 0 3px #d6a40070);
-  transition: opacity 0.35s ease;
+  transition: opacity 0.2s ease;
 }
 
-.hero-card .strategy-chip:hover::after {
+.hero-stage .strategy-chip-label {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-stage .strategy-chip:is(:hover, :focus-visible)::before {
+  background-size: 50% 100%, 50% 100%;
+}
+
+.hero-stage .strategy-chip:hover::after {
   opacity: 1;
 }
 
-.hero-card .strategy-chip:focus-visible::after {
+.hero-stage .strategy-chip:focus-visible::after {
   opacity: 1;
 }
+
 .hero-copy h1 {
   text-shadow: 0 3px 18px rgba(0, 0, 0, 0.48);
 }
