@@ -262,6 +262,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
     arms = 4,
     twist = 4.0,
     armStrength = 0.55,
+    armBrightness = 1,
     dust = 0.5,
     core = 1.2,
     coreSize = 0.09,
@@ -285,6 +286,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
     hoverBoost = 0.5,
     paused = false,
     quality = 1,
+    maxFps = 60,
     // New advanced props
     orbitalStreams = 200,
     nebulaClouds = 25,
@@ -349,13 +351,14 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
     c1: parseColor(colors[1], [255, 194, 238]),
     c2: parseColor(colors[2] || '#00D4FF', [0, 212, 255]),
     c3: parseColor(colors[3] || '#FFD700', [255, 215, 0]),
-    starSize, twist, armStrength: clamp(armStrength, 0, 1),
+    starSize, twist, armStrength: clamp(armStrength, 0, 1), armBrightness: clamp(armBrightness, 1, 3),
     dust: clamp(dust, 0, 1), coreSize, core, tilt, roll, scale,
     centerX, centerY, speed, twinkle: clamp(twinkle, 0, 1),
     depth: clamp(depth, 0, 1), glow, intensity,
     interactive, hoverWake, clickRipple, wakeStrength,
     rippleStrength, hoverBoost, paused,
     quality: clamp(quality, 0.25, 1),
+    maxFps: clamp(maxFps, 1, 60),
     coreGlow, corePulse, coreRays, coreRayCount,
     gravitationalLensing, lensingStrength,
     particleTrails, bloomIntensity,
@@ -481,6 +484,10 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
     const frame = (now) => {
       raf = 0
       const L = liveRef.current
+      if (last && now - last < 1000 / L.maxFps) {
+        scheduleFrame?.()
+        return
+      }
       const dt = Math.min(0.05, last ? (now - last) / 1000 : 0.016)
       last = now
 
@@ -690,14 +697,16 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         let rr = S.radius[i] + dr[i]
         if (rr < 0) rr = 0; else if (rr > 1.2) rr = 1.2
 
-        let a, wgt = 1
+        let a, wgt = 1, armLight = 1
         if (S.arm[i]) {
           let o = S.phase0[i] + S.rate[i] * orbitT
           o -= period * Math.floor(o / period + 0.5)
           a = S.base[i] + rr * twist2 + o + pat + dth[i]
           const sg = sig0 * (0.45 + 0.9 * rr)
           const q = o / sg
-          wgt = floor + (1 - floor) * Math.exp(-0.5 * q * q)
+          const armFocus = Math.exp(-0.5 * q * q)
+          wgt = floor + (1 - floor) * armFocus
+          armLight = 1 + (L.armBrightness - 1) * armFocus
           if (dustAmt > 0 && rr > dustMin) {
             const dd = (q + 0.95) / 0.45
             wgt *= 1 - dustAmt * 0.85 * Math.exp(-dd * dd)
@@ -799,7 +808,7 @@ const BinaryOrbits = forwardRef(function BinaryOrbits(props, ref) {
         const df = 1 + depthAmt * 0.5 * dep
         const edge = clamp((1.02 - rr) / 0.2, 0, 1)
         const twk = 1 - tw * 0.5 * (1 + Math.sin(twT * S.twRate[i] + S.twPhase[i]))
-        const al = S.bright[i] * wgt * df * edge * twk * intens * boost * (1 + 0.8 * wki) * 0.65
+        const al = S.bright[i] * wgt * armLight * df * edge * twk * intens * boost * (1 + 0.8 * wki) * 0.65
         if (al < 0.004) continue
 
         const size = baseSize * S.size[i] * (1 + 0.3 * dep) * (S.coreStar[i] ? corePulseVal * 1.3 : 1)

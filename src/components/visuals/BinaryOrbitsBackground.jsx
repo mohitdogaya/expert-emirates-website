@@ -4,7 +4,9 @@ import BinaryOrbits from './BinaryOrbits.jsx'
 function BinaryOrbitsBackground({ sections = [] }) {
   const [visible, setVisible] = useState(false)
   const [started, setStarted] = useState(false)
-  const [compact, setCompact] = useState(false)
+  const [compact, setCompact] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 760px), (pointer: coarse)').matches,
+  )
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 760px), (pointer: coarse)')
@@ -82,32 +84,41 @@ function BinaryOrbitsBackground({ sections = [] }) {
       colors={['#fde35f', '#ffed4e']}
       backgroundColor="#0A0A0A"
       mode="auto"
-      stars={compact ? 26000 : 50000}
-      starSize={compact ? 1.15 : 1.3}
-      sparkle={4}
-      arms={4}
-      twist={4.5}
-      armStrength={0.9}
-      dust={0.2}
+      stars={compact ? 18000 : 48000}
+      starSize={compact ? 1.3 : 1.3}
+      sparkle={compact ? 1 : 4}
+      arms={compact ? 2 : 4}
+      twist={compact ? 3.2 : 4.5}
+      armStrength={compact ? 1 : 0.9}
+      armBrightness={compact ? 2.2 : 1}
+      dust={compact ? 0 : 0.2}
       core={1.2}
       coreSize={0.012}
+      orbitalStreams={compact ? 120 : 200}
+      nebulaClouds={compact ? 16 : 25}
+      energyArcs={compact ? 5 : 8}
       innerVoid={0}
       thickness={0.01}
-      tilt={compact ? 50 : 62}
+      tilt={compact ? 35 : 62}
       roll={-8}
-      scale={compact ? 2 : 0.7}
+      scale={compact ? 1.9 : 0.7}
       centerX={0.5}
       centerY={compact ? 0.38 : 0.52}
       speed={-1.7}
-      twinkle={0.82}
+      twinkle={compact ? 0.48 : 0.82}
       depth={0.4}
-      glow={0.2}
-      intensity={1.2}
+      glow={compact ? 0.2 : 0.2}
+      intensity={compact ? 1.5 : 1.2}
+      bloomIntensity={compact ? 0.25 : 0.6}
+      colorShift={!compact}
+      particleTrails={!compact}
+      vortexEffect={!compact}
+      maxFps={compact ? 30 : 60}
       interactive={false}
       paused={!visible}
       hoverWake={false}
       clickRipple={false}
-      quality={compact ? 0.7 : 0.92}
+      quality={compact ? 0.62 : 0.92}
     />
   )
 }

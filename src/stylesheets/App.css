@@ -24,6 +24,7 @@
   inset: 0;
   z-index: 0;
   display: block;
+  background-color: #0a0a0a;
   pointer-events: none;
 }
 .lightning-background {
