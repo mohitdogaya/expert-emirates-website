@@ -64,10 +64,6 @@
     display: none;
   }
 
-  .landing-particle-fall {
-    animation: none !important;
-    transform: none !important;
-  }
 }
 .lightning-background {
   opacity: 0;

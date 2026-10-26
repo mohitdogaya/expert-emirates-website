@@ -116,42 +116,43 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
           </radialGradient>
         </defs>
         <g className="landing-rain-particles" fill="url(#gold-particle)">
-          {particles.slice(0, compact ? 72 : particles.length).map((particle) => (
+          {particles.slice(0, compact ? 96 : particles.length).map((particle) => (
             <circle
               key={particle.key}
               className="landing-particle-fall"
               cx={particle.x.toFixed(1)}
               cy={particle.y.toFixed(1)}
               r={particle.radius.toFixed(1)}
-              opacity={particle.opacity.toFixed(2)}
+              opacity={(compact ? Math.min(1, particle.opacity * 1.45) : particle.opacity).toFixed(2)}
               style={{ '--fall-delay': `${particle.fallDelay.toFixed(2)}s`, '--fall-duration': `${particle.fallDuration.toFixed(2)}s` }}
             />
           ))}
         </g>
       </svg>
-      {!compact && <Lightning
+      <Lightning
         color="#eab308"
         bolts={1}
-        spread={0.6}
-        branches={0.5}
+        spread={compact ? 0.45 : 0.6}
+        branches={compact ? 0.28 : 0.5}
         xOffset={0}
         angle={-10}
         size={1}
         thickness={1}
-        glow={0.35}
-        intensity={0.4}
-        speed={0.6}
-        flicker={0.4}
-        mouseInteraction
+        glow={compact ? 0.28 : 0.35}
+        intensity={compact ? 0.62 : 0.55}
+        speed={compact ? 0.35 : 0.6}
+        flicker={compact ? 0.25 : 0.4}
+        dpr={compact ? 0.7 : undefined}
+        mouseInteraction={!compact}
         mouseStrength={1}
-        clickStrike
+        clickStrike={!compact}
         intro
         paused={!active}
         fade={0}
-        opacity={0.025}
+        opacity={compact ? 0.12 : 0.055}
         lightMode={false}
         style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'transparent' }}
-      />}
+      />
     </div>
   )
 }

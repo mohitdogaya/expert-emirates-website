@@ -44,11 +44,13 @@
   isolation: isolate;
   border: 1px solid rgba(255, 255, 255, .06);
   border-radius: 20px;
-  background-color: #1e1c25;
-  background-image: url('/UseIcons/feature-bg.png');
-  background-position: center bottom;
-  background-size: 100% 43%;
-  background-repeat: no-repeat;
+  /* Keep the image separate from BorderGlow's inline background shorthand. */
+  background-color: rgba(255, 255, 255, .075) !important;
+  backdrop-filter: blur(18px) saturate(165%);
+  -webkit-backdrop-filter: blur(18px) saturate(165%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28),
+    inset 0 -1px 0 rgba(255, 255, 255, .08),
+    0 12px 32px rgba(0, 0, 0, .24);
 
   opacity: var(--progress);
   transform:
@@ -58,27 +60,45 @@
   transition: border-color .4s ease, box-shadow .4s ease;
 }
 
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(15, 14, 22, .42)),
+    url('/UseIcons/feature-bg.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
 .feature-card::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: radial-gradient(
-    320px circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 177, 32, .06),
-    transparent 60%
-  );
-  opacity: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .2), transparent 38%),
+    radial-gradient(
+      320px circle at var(--mouse-x) var(--mouse-y),
+      rgba(255, 177, 32, .1),
+      transparent 60%
+    );
+  opacity: .42;
   transition: opacity .4s ease;
   pointer-events: none;
   z-index: 0;
 }
 
-.feature-card:hover::after { opacity: 1; }
+.feature-card:hover::after { opacity: .8; }
 
 .feature-card:hover {
-  border-color: rgba(255, 184, 42, .18);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .35), 0 0 60px rgba(255, 170, 30, .05);
+  border-color: rgba(255, 255, 255, .38);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .34),
+    0 20px 50px rgba(0, 0, 0, .32), 0 0 36px rgba(255, 255, 255, .08);
 }
 
 .feature-card .feature-graphic {
@@ -89,8 +109,6 @@
   place-items: center;
   width: 78px;
   height: 78px;
-  color: #f5b321;
-  filter: drop-shadow(0 8px 18px rgba(255, 174, 0, .16));
   z-index: 2;
 }
 
@@ -162,8 +180,19 @@
   .feature-card {
     height: 170px;
     min-height: 170px;
-    opacity: 1;
-    transform: none;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .feature-card:hover,
+  .feature-card:hover .feature-graphic img,
+  .feature-card:hover .feature-title,
+  .feature-card:hover .feature-arrow {
+    transform: none !important;
+    transition: none !important;
+  }
+  .feature-card:hover::after {
+    opacity: .42;
   }
 }
 
