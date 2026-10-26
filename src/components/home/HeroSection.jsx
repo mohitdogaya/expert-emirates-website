@@ -49,10 +49,11 @@ function HeroSection() {
   }, [titleVisible])
 
   return (
-    <section className={`hero-card${titleVisible ? ' title-visible' : ''}${detailsVisible ? ' is-visible' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
-      <div className="hero-scrim" />
+    <div className="hero-stage">
+      <section className={`hero-card${titleVisible ? ' title-visible' : ''}${detailsVisible ? ' is-visible' : ''}`} aria-labelledby="hero-title" ref={heroRef}>
+        <div className="hero-scrim" />
 
-      <div className="hero-topline">
+        <div className="hero-topline">
         <div className="hero-copy">
           <span className="eyebrow hero-eyebrow"><FiZap aria-hidden="true" /> Next-gen algorithmic trading</span>
           <h1 id="hero-title">
@@ -81,8 +82,9 @@ function HeroSection() {
             </Magnet>
           </div>
         </div>
-      </div>
-
+        </div>
+        <a className="scroll-cue" href="#bots" aria-label="Scroll to bot options"><FiChevronDown aria-hidden="true" /></a>
+      </section>
       <div className="hero-bottom">
         <div className="strategy-list" id="bot-strategies" aria-label="Choose a trading bot">
           {strategies.map((strategy, index) => (
@@ -110,8 +112,7 @@ function HeroSection() {
           <div><strong>70% hedge</strong><span>Hedge</span></div>
         </div>
       </div>
-      <a className="scroll-cue" href="#bots" aria-label="Scroll to bot options"><FiChevronDown aria-hidden="true" /></a>
-    </section>
+    </div>
   )
 }
 
