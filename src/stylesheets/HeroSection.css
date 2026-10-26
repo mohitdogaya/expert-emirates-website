@@ -615,9 +615,25 @@
   box-shadow: 0 0 24px rgba(255, 231, 155, 0.15);
 }
 
+.hero-actions .button-outline {
+  color: #fff;
+  background: #111;
+  border-color: #333;
+}
+
+.hero-actions .button-outline:hover {
+  background: #1a1a1a;
+}
+
 .hero-card .hero-actions .button {
   opacity: 0;
   transform: translateY(12px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.75, 0.25, 1);
+}
+
+.hero-card.is-visible .hero-actions .button {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .hero-card.is-visible .hero-actions .button-outline {
