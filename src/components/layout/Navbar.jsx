@@ -41,8 +41,31 @@ function Navbar() {
   const [openDropdown, setOpenDropdown] = useState(null)
   const [qrOpen, setQrOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const headerRef = useRef(null)
   const qrRef = useRef(null)
   const dropdownRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return undefined
+    const closeOnOutsideClick = (event) => {
+      if (!headerRef.current?.contains(event.target)) {
+        setOpen(false)
+        setOpenDropdown(null)
+      }
+    }
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setOpen(false)
+        setOpenDropdown(null)
+      }
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [open])
 
   useEffect(() => {
     if (!openDropdown) return undefined
@@ -87,7 +110,7 @@ function Navbar() {
   }
 
   return (
-    <header className="site-header" id="home">
+    <header className="site-header" id="home" ref={headerRef}>
       <a className="brand" href="#home" aria-label="Expert Emirates home">
         <img className="brand-logo" src="/UseIcons/navlogo.webp" alt="Expert Emirates" />
       </a>
