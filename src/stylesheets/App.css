@@ -27,6 +27,48 @@
   background-color: #0a0a0a;
   pointer-events: none;
 }
+@media (pointer: coarse) {
+  .feature-card,
+  .why-card,
+  .lesson-card,
+  .step-card,
+  .product-video-card,
+  .installation-guide {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+  }
+
+  .feature-card > div:nth-child(1),
+  .feature-card > div:nth-child(2),
+  .feature-card > span,
+  .why-card > div:nth-child(1),
+  .why-card > div:nth-child(2),
+  .why-card > span,
+  .lesson-card > div:nth-child(1),
+  .lesson-card > div:nth-child(2),
+  .lesson-card > span,
+  .step-card > div:nth-child(1),
+  .step-card > div:nth-child(2),
+  .step-card > span,
+  .product-video-card > div:nth-child(1),
+  .product-video-card > div:nth-child(2),
+  .product-video-card > span,
+  .installation-guide > div:nth-child(1),
+  .installation-guide > div:nth-child(2),
+  .installation-guide > span {
+    display: none !important;
+  }
+
+  .feature-card::after {
+    display: none;
+  }
+
+  .landing-particle-fall {
+    animation: none !important;
+    transform: none !important;
+  }
+}
 .lightning-background {
   opacity: 0;
   visibility: hidden;

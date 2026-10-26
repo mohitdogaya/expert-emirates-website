@@ -28,6 +28,16 @@ const particles = createParticles()
 function LightningBackground({ sections = [], excludedSections = [] }) {
   const backgroundRef = useRef(null)
   const [active, setActive] = useState(false)
+  const [compact, setCompact] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 760px), (pointer: coarse)').matches,
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 760px), (pointer: coarse)')
+    const update = () => setCompact(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const background = backgroundRef.current
@@ -106,7 +116,7 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
           </radialGradient>
         </defs>
         <g className="landing-rain-particles" fill="url(#gold-particle)">
-          {particles.map((particle) => (
+          {particles.slice(0, compact ? 72 : particles.length).map((particle) => (
             <circle
               key={particle.key}
               className="landing-particle-fall"
@@ -119,7 +129,7 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
           ))}
         </g>
       </svg>
-      <Lightning
+      {!compact && <Lightning
         color="#eab308"
         bolts={1}
         spread={0.6}
@@ -141,7 +151,7 @@ function LightningBackground({ sections = [], excludedSections = [] }) {
         opacity={0.025}
         lightMode={false}
         style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', background: 'transparent' }}
-      />
+      />}
     </div>
   )
 }

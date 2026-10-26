@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense } from 'react'
+import { Component, lazy, Suspense, useEffect, useState } from 'react'
 import './stylesheets/App.css'
 import './stylesheets/SectionShared.css'
 import Navbar from './components/layout/Navbar.jsx'
@@ -54,11 +54,22 @@ const fadeContentProps = {
 }
 
 function App() {
+  const [coarsePointer, setCoarsePointer] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches,
+  )
+
+  useEffect(() => {
+    const media = window.matchMedia('(pointer: coarse)')
+    const update = () => setCoarsePointer(media.matches)
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
   return (
     <>
       <BackgroundErrorBoundary>
         <Suspense fallback={<div className="background-fallback" aria-hidden="true" />}>
-          <SplashCursor
+          {!coarsePointer && <SplashCursor
             quality="low"
             intensity={0.7}
             force={0.7}
@@ -68,7 +79,7 @@ function App() {
             shading={0}
             glow={0}
             intro={false}
-          />
+          />}
           <BinaryOrbitsBackground sections={binaryOrbitsSections} />
         </Suspense>
       </BackgroundErrorBoundary>

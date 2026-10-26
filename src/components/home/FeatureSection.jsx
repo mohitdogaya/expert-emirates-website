@@ -6,6 +6,7 @@ import '../../stylesheets/FeatureSection.css'
 
 function FeatureCard({ title, image }) {
   const handlePointerMove = (event) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return
     const card = event.currentTarget
     if (!card) return
     const b = card.getBoundingClientRect()
@@ -46,6 +47,8 @@ function FeatureSection() {
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
+
+    if (window.matchMedia('(max-width: 560px), (prefers-reduced-motion: reduce)').matches) return
 
     const cards = Array.from(section.querySelectorAll('.feature-card'))
     if (!cards.length) return
