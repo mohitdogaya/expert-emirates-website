@@ -8,7 +8,7 @@ const randomAt = (a, b) => {
 
 function createParticles() {
   const particles = []
-  for (let index = 0; index < 120; index += 1) {
+  for (let index = 0; index < 350; index += 1) {
     particles.push({
       key: index,
       x: 36 + randomAt(index, 1) * 1528,
